@@ -116,7 +116,7 @@ const SignUpPage: FC<Props> = ({}) => {
       <span className="text-4xl font-montserrat font-black absolute top-4 left-4">
         TokoTrend
       </span>
-      <div className="flex flex-col justify-center items-center bg-secondary rounded-xl w-2/6 p-8 m-12 bg-secondary">
+      <div className="flex flex-col justify-center items-center bg-secondary rounded-xl w-2/6 p-8 bg-secondary">
         <h1 className="text-3xl font-montserrat font-bold mb-4">MASUK</h1>
         <form onSubmit={onSubmitForm} className="w-full">
           <StyledInput
@@ -144,7 +144,9 @@ const SignUpPage: FC<Props> = ({}) => {
           </StyledButton>
         </form>
       </div>
-      <CopyRight />
+      <div className="absolute bottom-4">
+        <CopyRight />
+      </div>
     </div>
   );
 };
