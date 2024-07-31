@@ -6,13 +6,18 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --secondary-color: #f0f0f0;
+  --tertiary-color: #d87234;
+  color: #171a1c;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    /* --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0; */
+    background-color: #ffffff;
+    color: #171a1c;
   }
 }
 
@@ -30,4 +35,15 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.min-height-screen {
+  min-height: 100vh !important;
+}
+
+.min-width-screen {
+  min-width: 100vw !important;
+}
+.bg-secondary {
+  background-color: var(--secondary-color);
 }
