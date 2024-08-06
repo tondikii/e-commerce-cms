@@ -4,9 +4,10 @@ import {
   MAX_VARCHAR_LENGTH,
   RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT,
 } from "@/constant";
+import {useUnrequiredAuth} from "@/hooks";
 import {validateEmailFormat} from "@/utils";
 import {Key, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
-import {Box, IconButton, Typography} from "@mui/joy";
+import {IconButton} from "@mui/joy";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useMemo, useState, type FC} from "react";
@@ -31,6 +32,9 @@ const SignUpPage: FC<Props> = ({}) => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  // direct to home if have session
+  useUnrequiredAuth();
 
   const {errorsForm, isValidForm} = useMemo(() => {
     const errorsForm: FormSignInType = {...initialFormSignIn};

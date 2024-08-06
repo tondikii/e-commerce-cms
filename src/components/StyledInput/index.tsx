@@ -24,7 +24,7 @@ const customSx = {
     transition: "box-shadow .15s ease-in-out",
   },
   "&:focus-within": {
-    borderColor: "black",
+    borderColor: "#212b36",
   },
 };
 

@@ -1,45 +1,30 @@
 "use client";
-import {type FC} from "react";
-import {Button} from "@mui/joy";
-import {signOut} from "next-auth/react";
-import {useRouter} from "next/navigation";
 
+import {FC} from "react";
+import {SessionType} from "@/types";
+import Image from "next/image";
+import {Typography} from "@mui/joy";
 interface Props {
-  name?: string;
+  session: SessionType;
 }
 
-const View: FC<Props> = ({name}) => {
-  const router = useRouter();
-  const handleSignOut = () => {
-    signOut({
-      callbackUrl: "/sign-in",
-    });
-  };
-
-  const navigateToSignIn = () => {
-    router.push("/sign-in");
-  };
-
-  if (!name) {
-    return (
-      <>
-        <span>
-          tolong masuk terlebih dahulu untuk membuka halaman dashboard.
-        </span>
-        <Button color="neutral" onClick={navigateToSignIn}>
-          Masuk
-        </Button>
-      </>
-    );
-  }
-
+// eslint-disable-next-line @next/next/no-async-client-component
+const HomePageComponent: FC<Props> = async ({session}) => {
   return (
-    <>
-      <span>Selamat bekerja {name}</span>
-      <Button color="danger" onClick={handleSignOut}>
-        Keluar
-      </Button>
-    </>
+    <div className="w-full h-full flex flex-col justify-center items-center">
+      <Image
+        src="/Teamwork.svg"
+        alt="Illustration developer"
+        priority
+        className="w-3/4 md:1/2 lg:w-2/5 mb-4"
+        width={0}
+        height={0}
+      />
+      <Typography level="title-lg" color="neutral">
+        Selamat bekerja {session?.user?.name}
+      </Typography>
+    </div>
   );
 };
-export default View;
+
+export default HomePageComponent;
