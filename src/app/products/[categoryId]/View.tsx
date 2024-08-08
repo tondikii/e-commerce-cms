@@ -4,14 +4,20 @@ import {FC} from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 import {OrderTable, OrderList} from "@/components";
+import {AddRounded} from "@mui/icons-material";
+import {useParams} from "next/navigation";
+import {OBJECT_CATEGORIES} from "@/constant";
 
 interface Props {}
 
 // eslint-disable-next-line @next/next/no-async-client-component
 const ProductsPageComponent: FC<Props> = async ({}) => {
+  const {categoryId} = useParams();
+
+  const categoryLabel: string = OBJECT_CATEGORIES[`${categoryId}`] || "";
+
   return (
     <>
       <Box
@@ -26,14 +32,20 @@ const ProductsPageComponent: FC<Props> = async ({}) => {
         }}
       >
         <Typography level="h2" component="h1">
-          Orders
+          Produk {categoryLabel}
         </Typography>
         <Button
-          color="primary"
-          startDecorator={<DownloadRoundedIcon />}
-          size="sm"
+          sx={{
+            "&:hover": {
+              backgroundColor: "#212b36",
+            },
+            bgcolor: "#212b36",
+            fontWeight: 700,
+          }}
+          startDecorator={<AddRounded />}
+          size="md"
         >
-          Download PDF
+          Produk Baru
         </Button>
       </Box>
       <OrderTable />

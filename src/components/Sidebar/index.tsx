@@ -22,32 +22,18 @@ import {usePathname} from "next/navigation";
 import Swal from "sweetalert2";
 import {signOut} from "next-auth/react";
 import {Toggler} from "../";
+import {CATEGORIES} from "@/constant";
 
 const menus: MenusType = [
   {label: "Home", route: "/", icon: <HomeRoundedIcon />},
   {
-    label: "Products",
+    label: "Produk",
     route: "/",
     icon: <DashboardRoundedIcon />,
-    child: [
-      {
-        label: "T-shirts",
-        route: "/products/1",
-      },
-      {
-        label: "Shorts",
-        route: "/products/2",
-      },
-      {
-        label: "Shirts",
-        route: "/products/3",
-      },
-      {label: "Hoodie", route: "/products/4"},
-      {
-        label: "Jeans",
-        route: "/products/5",
-      },
-    ],
+    child: CATEGORIES.map(({id, name}) => ({
+      label: name,
+      route: `/products/${id}`,
+    })),
   },
 ];
 
