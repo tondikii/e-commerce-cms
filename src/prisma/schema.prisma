@@ -27,46 +27,80 @@ model User {
 }
 
 model Size {
-  id        Int     @id @default(autoincrement())
-  name      String  @db.VarChar(10) @unique
-  code      String  @db.VarChar(5)  @unique
-  products  Product[]
+  id            Int     @id @default(autoincrement())
+  name          String  @db.VarChar(10) @unique
+  code          String  @db.VarChar(5)  @unique
+  productUnits  ProductUnit[]
 }
 
 model Color {
-  id        Int     @id @default(autoincrement())
-  name      String  @db.VarChar(15) @unique
-  hexCode   String  @db.VarChar(7)  @unique
-  products  Product[]
+  id              Int     @id @default(autoincrement())
+  name            String  @db.VarChar(15) @unique
+  hexCode         String  @db.VarChar(7)  @unique
+  productUnits    ProductUnit[]
+  productImages   ProductImage[]
+}
+
+model Category {
+  id              Int     @id @default(autoincrement())
+  name            String  @db.VarChar(15) @unique
+  products        Product[]
+}
+
+model Style {
+  id              Int     @id @default(autoincrement())
+  name            String  @db.VarChar(15) @unique
+  products        Product[]
 }
 
 model Product {
   id              Int     @id @default(autoincrement())
-  name            String  @db.VarChar(50)
+  name            String  @db.VarChar(50) @unique
   description     String  @db.VarChar(255)
-  images          String[]
   price           Int
   discount        Int?
-  quantity        Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  productImages   ProductImage[]
+  productUnits    ProductUnit[]
+  productRatings  ProductRating[]
+  category        Category @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  style           Style @relation(fields: [styleId], references: [id])
+  styleId         Int
+}
+
+model ProductImage {
+  id              Int     @id @default(autoincrement())
+  url             String  @unique
+  product         Product @relation(fields: [productId], references: [id])
+  productId       Int
+  color           Color   @relation(fields: [colorId], references: [id])
+  colorId         Int
+}
+
+model ProductUnit {
+  id              Int     @id @default(autoincrement())
+  code            String  @unique // combination productId, sizeId, colorId
+  quantity        Int
+  product         Product    @relation(fields: [productId], references: [id])
+  productId       Int
   size            Size    @relation(fields: [sizeId], references: [id])
   sizeId          Int
   color           Color   @relation(fields: [colorId], references: [id])
   colorId         Int
   carts           Cart[]
-  productRatings  ProductRating[]
 }
 
 model Cart {
-  id          Int     @id @default(autoincrement())
-  quantity    Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User @relation(fields: [userId], references: [id])
-  userId      Int
-  product     Product @relation(fields: [productId], references: [id])
-  productId   Int
+  id              Int     @id @default(autoincrement())
+  quantity        Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User @relation(fields: [userId], references: [id])
+  userId          Int
+  productUnit     ProductUnit @relation(fields: [productUnitId], references: [id])
+  productUnitId   Int
 }
 
 model ProductRating {

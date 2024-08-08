@@ -51,6 +51,47 @@ async function main() {
   });
   console.log(`Inserted ${resSizes.count} sizes.`);
 
+  // insert category
+  const categories: Prisma.CategoryCreateInput[] = [
+    {
+      name: "T-shirts",
+    },
+    {
+      name: "Shorts",
+    },
+    {
+      name: "Shirts",
+    },
+    {name: "Hoodie"},
+    {
+      name: "Jeans",
+    },
+  ];
+  const resCategories = await prisma.category.createMany({
+    data: categories,
+    skipDuplicates: true, // Optional: Skip duplicate entries based on unique constraints
+  });
+  console.log(`Inserted ${resCategories.count} categories.`);
+
+  // insert styles
+  const styles: Prisma.StyleCreateInput[] = [
+    {
+      name: "Casual",
+    },
+    {
+      name: "Formal",
+    },
+    {
+      name: "Party",
+    },
+    {name: "Gym"},
+  ];
+  const resStyles = await prisma.style.createMany({
+    data: styles,
+    skipDuplicates: true, // Optional: Skip duplicate entries based on unique constraints
+  });
+  console.log(`Inserted ${resStyles.count} styles.`);
+
   const colors: Prisma.ColorCreateInput[] = [
     {
       name: "Light Green",
@@ -89,12 +130,126 @@ async function main() {
       name: "Black",
       hexCode: "#000000",
     },
+    {
+      name: "Olive",
+      hexCode: "#4F4631",
+    },
   ];
   const resColors = await prisma.color.createMany({
     data: colors,
     skipDuplicates: true, // Optional: Skip duplicate entries based on unique constraints
   });
   console.log(`Inserted ${resColors.count} colors.`);
+
+  // insert products
+  const products: Prisma.ProductCreateManyInput[] = [
+    {
+      name: "T-SHIRT WITH TAPE DETAILS",
+      description:
+        "This t-shirt which is perfect for casual occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+      price: 125000,
+      categoryId: 1,
+      styleId: 1,
+    },
+    {
+      name: "One Life Graphic T-shirt",
+      description:
+        "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+      price: 260000,
+      categoryId: 1,
+      styleId: 1,
+    },
+  ];
+
+  const resProducts = await prisma.product.createMany({
+    data: products,
+    skipDuplicates: true,
+  });
+
+  console.log(`Inserted ${resProducts.count} products.`);
+
+  // insert product images
+  const productImages: Prisma.ProductImageCreateManyInput[] = [
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%207_SWT8K5YL6.jpg?updatedAt=1722946189666",
+      productId: 1,
+      colorId: 10,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%201_jqVPeGRCt.jpg?updatedAt=1723019840908",
+      productId: 2,
+      colorId: 11,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%205_XE-iX55iL.jpg?updatedAt=1723019840730",
+      productId: 2,
+      colorId: 11,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%206_4iCIbuZ3y.jpg?updatedAt=1723019840906",
+      productId: 2,
+      colorId: 11,
+    },
+  ];
+
+  const resProductImages = await prisma.productImage.createMany({
+    data: productImages,
+    skipDuplicates: true,
+  });
+
+  console.log(`Inserted ${resProductImages.count} product images.`);
+
+  const productUnits: Prisma.ProductUnitCreateManyInput[] = [
+    {
+      quantity: 3,
+      code: "P1/S3/C10",
+      productId: 1,
+      sizeId: 3,
+      colorId: 10,
+    },
+    {
+      quantity: 3,
+      code: "P1/S2/C10",
+      productId: 1,
+      sizeId: 2,
+      colorId: 10,
+    },
+    {
+      quantity: 3,
+      code: "P2/S1/C11",
+      productId: 2,
+      sizeId: 1,
+      colorId: 11,
+    },
+    {
+      quantity: 3,
+      code: "P2/S2/C11",
+      productId: 2,
+      sizeId: 2,
+      colorId: 11,
+    },
+    {
+      quantity: 3,
+      code: "P2/S3/C11",
+      productId: 2,
+      sizeId: 3,
+      colorId: 11,
+    },
+    {
+      quantity: 3,
+      code: "P2/S4/C11",
+      productId: 2,
+      sizeId: 4,
+      colorId: 11,
+    },
+  ];
+
+  const resProductUnits = await prisma.productUnit.createMany({
+    data: productUnits,
+    skipDuplicates: true,
+  });
+
+  console.log(`Inserted ${resProductUnits.count} product unit.`);
 }
 
 main()
