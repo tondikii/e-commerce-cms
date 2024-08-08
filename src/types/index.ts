@@ -17,7 +17,8 @@ export type SessionType = {
 
 export interface MenuType {
   label: string;
-  route: string;
-  icon: ReactNode;
+  route?: string;
+  icon?: ReactNode;
+  child?: MenuType[];
 }
 export type MenusType = MenuType[];

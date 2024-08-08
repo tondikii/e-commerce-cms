@@ -14,16 +14,41 @@ import Sheet from "@mui/joy/Sheet";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {closeSidebar, getInitialsName} from "../utils";
-import {MenusType, SessionType, UserType} from "@/types";
+import {MenusType, MenuType, SessionType, UserType} from "@/types";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import Swal from "sweetalert2";
 import {signOut} from "next-auth/react";
+import {Toggler} from "../";
 
 const menus: MenusType = [
   {label: "Home", route: "/", icon: <HomeRoundedIcon />},
-  {label: "Products", route: "/products", icon: <DashboardRoundedIcon />},
+  {
+    label: "Products",
+    route: "/",
+    icon: <DashboardRoundedIcon />,
+    child: [
+      {
+        label: "T-shirts",
+        route: "/products/1",
+      },
+      {
+        label: "Shorts",
+        route: "/products/2",
+      },
+      {
+        label: "Shirts",
+        route: "/products/3",
+      },
+      {label: "Hoodie", route: "/products/4"},
+      {
+        label: "Jeans",
+        route: "/products/5",
+      },
+    ],
+  },
 ];
 
 interface Props {
@@ -52,6 +77,49 @@ const Sidebar: React.FC<Props> = ({session}) => {
         callbackUrl: "/sign-in",
       });
     }
+  };
+
+  const renderMenu = (menu: MenuType) => {
+    const {label, icon, child = []} = menu;
+    const nested = Boolean(Array.isArray(child) && child.length > 0);
+
+    const renderComponent = (props: MenuType) => (
+      <ListItemButton
+        selected={pathname === props.route}
+        sx={{mt: nested ? 0.5 : 0}}
+      >
+        {props.icon ? props.icon : null}
+        <ListItemContent>
+          <Link href={props.route || ""}>
+            <Typography level="title-sm">{props.label}</Typography>
+          </Link>
+        </ListItemContent>
+      </ListItemButton>
+    );
+
+    return (
+      <ListItem key={label} nested={nested}>
+        {nested ? (
+          <Toggler
+            renderToggle={({open, setOpen}) => (
+              <ListItemButton onClick={() => setOpen(!open)}>
+                {icon}
+                <ListItemContent>
+                  <Typography level="title-sm">{label}</Typography>
+                </ListItemContent>
+                <KeyboardArrowDownIcon
+                  sx={{transform: open ? "rotate(180deg)" : "none"}}
+                />
+              </ListItemButton>
+            )}
+          >
+            <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
+          </Toggler>
+        ) : (
+          renderComponent(menu)
+        )}
+      </ListItem>
+    );
   };
 
   return (
@@ -127,18 +195,7 @@ const Sidebar: React.FC<Props> = ({session}) => {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-          {menus.map(({label, route, icon}) => (
-            <ListItem key={route}>
-              <ListItemButton selected={pathname === route}>
-                {icon}
-                <ListItemContent>
-                  <Link href={route}>
-                    <Typography level="title-sm">{label}</Typography>
-                  </Link>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {menus.map((menu) => renderMenu(menu))}
         </List>
       </Box>
       <Divider />

@@ -29,15 +29,16 @@ export async function GET(request: Request) {
     const products = await prisma.product.findMany({
       where: {name: {contains: name, mode: "insensitive"}},
       include: {
-        productImages: true,
-        productUnits: true,
+        productImages: {select: {url: true}},
+        productUnits: {
+          select: {quantity: true, size: {select: {code: true}}},
+        },
       },
     });
     return NextResponse.json(products, {status: RESPONSE_STATUS_OK});
   } catch (err) {
-    return NextResponse.json(
-      {err},
-      {status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR}
-    );
+    return NextResponse.json(err, {
+      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+    });
   }
 }
