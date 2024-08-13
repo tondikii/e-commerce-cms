@@ -10,16 +10,23 @@ interface Props {
   label?: string;
   children: React.ReactNode;
   errorMessage?: string;
+  size?: "lg" | "sm" | "md";
 }
 
-const FormControl: FC<Props> = ({label, children, errorMessage}) => {
+const FormControl: FC<Props> = ({
+  label,
+  children,
+  errorMessage,
+  size = "md",
+}) => {
+
   return (
-    <FormControlMui sx={{marginTop: "1rem"}} error={Boolean(errorMessage)}>
-      {label ? (
-        <FormLabel sx={{fontSize: "1.125rem", lineHeight: "1.75rem"}}>
-          {label}
-        </FormLabel>
-      ) : null}
+    <FormControlMui
+      sx={{marginTop: "1rem", flex: 1}}
+      error={Boolean(errorMessage)}
+      size={size}
+    >
+      {label ? <FormLabel>{label}</FormLabel> : null}
       {children}
       {errorMessage ? (
         <FormHelperText>

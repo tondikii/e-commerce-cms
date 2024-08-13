@@ -1,6 +1,7 @@
 import {type Prisma} from "@prisma/client";
 
 import {prisma, bcrypt} from "@/lib";
+import {STYLES} from "@/constant";
 
 async function main() {
   // insert admin
@@ -54,17 +55,10 @@ async function main() {
   // insert category
   const categories: Prisma.CategoryCreateInput[] = [
     {
-      name: "T-shirts",
+      name: "Top",
     },
     {
-      name: "Shorts",
-    },
-    {
-      name: "Shirts",
-    },
-    {name: "Hoodie"},
-    {
-      name: "Jeans",
+      name: "Bottom",
     },
   ];
   const resCategories = await prisma.category.createMany({
@@ -74,18 +68,7 @@ async function main() {
   console.log(`Inserted ${resCategories.count} categories.`);
 
   // insert styles
-  const styles: Prisma.StyleCreateInput[] = [
-    {
-      name: "Casual",
-    },
-    {
-      name: "Formal",
-    },
-    {
-      name: "Party",
-    },
-    {name: "Gym"},
-  ];
+  const styles: Prisma.StyleCreateInput[] = STYLES;
   const resStyles = await prisma.style.createMany({
     data: styles,
     skipDuplicates: true, // Optional: Skip duplicate entries based on unique constraints
@@ -159,6 +142,70 @@ async function main() {
       categoryId: 1,
       styleId: 1,
     },
+    {
+      name: "Skinny Fit Jeans",
+      description:
+        "Celana yang memiliki sentuhan halus, tetap utuh dan lurus, cocok untuk pakaian kantor kombinasi lengan panjang yang dimasukkan dan celana kasual.",
+      price: 399000,
+      categoryId: 2,
+      styleId: 2,
+    },
+    {
+      name: "Checkered Shirt",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 359000,
+      categoryId: 1,
+      styleId: 1,
+    },
+    {
+      name: "Sleeve Stripped T-shirt",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 129000,
+      categoryId: 1,
+      styleId: 3,
+    },
+    {
+      name: "Vertical Stripped Shirt",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 299000,
+      categoryId: 1,
+      styleId: 2,
+    },
+    {
+      name: "Loose Fit Bermuda Shorts",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 399000,
+      categoryId: 2,
+      styleId: 1,
+    },
+    {
+      name: "Celana Pendek Chino",
+      description:
+        "These chino shorts is really good for casual walks and every day use, pretty comfy and trendy.",
+      price: 299000,
+      categoryId: 2,
+      styleId: 2,
+    },
+    {
+      name: "Pullover Sweat Hoodie",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 499000,
+      categoryId: 1,
+      styleId: 1,
+    },
+    {
+      name: "Jaket Sweat Hoodie Ritsleting",
+      description:
+        "Bahan 100% katun brushed yang terasa lembut di bagian luar, serta halus dan nyaman di bagian dalam.",
+      price: 599000,
+      categoryId: 1,
+      styleId: 1,
+    },
   ];
 
   const resProducts = await prisma.product.createMany({
@@ -188,6 +235,46 @@ async function main() {
     {
       url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%206_4iCIbuZ3y.jpg?updatedAt=1723019840906",
       productId: 2,
+      colorId: 11,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%208__PuZfyRtl.jpg?updatedAt=1723327264777",
+      productId: 3,
+      colorId: 6,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%209_i_vwkQU3A.jpg?updatedAt=1723327938519",
+      productId: 4,
+      colorId: 2,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%2010_mlQ_ln8yD.jpg?updatedAt=1723327938481",
+      productId: 5,
+      colorId: 4,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%207%20(1)_I0g-oVhIl.jpg?updatedAt=1723327938461",
+      productId: 6,
+      colorId: 11,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/image%209%20(1)_6nz3EtsKoO.jpg?updatedAt=1723327938404",
+      productId: 7,
+      colorId: 6,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/shorts_vpTePpKGl.jpg?updatedAt=1723327938562",
+      productId: 8,
+      colorId: 9,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/hoodie_RriGu4j7p.jpg?updatedAt=1723327938412",
+      productId: 9,
+      colorId: 9,
+    },
+    {
+      url: "https://ik.imagekit.io/fnzl2pmmqv2d/hoodie_ritsleting_A8fk0f47f.jpg?updatedAt=1723327938512",
+      productId: 10,
       colorId: 11,
     },
   ];

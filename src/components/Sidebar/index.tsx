@@ -30,9 +30,9 @@ const menus: MenusType = [
     label: "Produk",
     route: "/",
     icon: <DashboardRoundedIcon />,
-    child: CATEGORIES.map(({id, name}) => ({
+    child: CATEGORIES.map(({route, name}) => ({
       label: name,
-      route: `/products/${id}`,
+      route: `/products/${route}`,
     })),
   },
 ];

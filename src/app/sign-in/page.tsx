@@ -1,5 +1,5 @@
 "use client";
-import {CopyRight, StyledButton, StyledInput} from "@/components";
+import {CopyRight, StyledSubmitButton, StyledInput} from "@/components";
 import {
   MAX_VARCHAR_LENGTH,
   RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT,
@@ -143,9 +143,9 @@ const SignUpPage: FC<Props> = ({}) => {
             startDecorator={<Key />}
             endDecorator={renderVisibilityPassword()}
           />
-          <StyledButton type="submit" loading={loading}>
+          <StyledSubmitButton type="submit" loading={loading}>
             MASUK
-          </StyledButton>
+          </StyledSubmitButton>
         </form>
       </div>
       <div className="absolute bottom-4">

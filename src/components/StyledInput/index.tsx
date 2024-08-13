@@ -42,7 +42,7 @@ const StyledInput: FC<Props> = ({
   endDecorator,
 }) => {
   return (
-    <FormControl label={label} errorMessage={errorMessage}>
+    <FormControl label={label} errorMessage={errorMessage} size={size}>
       <Input
         type={type}
         name={name}
