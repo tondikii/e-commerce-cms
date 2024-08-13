@@ -102,6 +102,8 @@ const SignUpPage: FC<Props> = ({}) => {
         text: message,
         icon: "error",
       });
+    } finally{
+      setLoading(false)
     }
   };
 
