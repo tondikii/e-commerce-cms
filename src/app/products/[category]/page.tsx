@@ -105,6 +105,10 @@ const ProductsPage: FC<Props> = ({}) => {
     setSearchParams({name: "name", value: filters.name, resetPagination: true});
   };
 
+  const handleCreateProduct = () => {
+    router.push(`${category}/create`)
+  }
+
   useEffect(() => {
     if (urlSearchParams && fetchedProducts.data) {
       setRefetch(true);
@@ -128,7 +132,7 @@ const ProductsPage: FC<Props> = ({}) => {
         <Typography level="h2" component="h1">
           Produk {categoryLabel}
         </Typography>
-        <StyledButton startDecorator={<AddRounded />}>Produk Baru</StyledButton>
+        <StyledButton startDecorator={<AddRounded />} onClick={handleCreateProduct}>Produk Baru</StyledButton>
       </Box>
       <Box
         className="SearchAndFilters-tabletUp"

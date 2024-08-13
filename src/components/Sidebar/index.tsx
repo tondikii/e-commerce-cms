@@ -24,11 +24,75 @@ import {signOut} from "next-auth/react";
 import {Toggler} from "../";
 import {CATEGORIES} from "@/constant";
 
+interface MenuProps {
+  pathname: string;
+  menu: MenuType;
+}
+
+const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
+  const {label, icon, child = [], route} = menu;
+  const nested = Boolean(Array.isArray(child) && child.length > 0);
+
+  const [opened, setOpened] = React.useState<boolean>(false);
+
+  const renderComponent = (props: MenuType) => {
+    return (
+      <ListItemButton
+        selected={
+          pathname === props.route ||
+          (props.route !== "/" && pathname.includes(props.route) && opened)
+        }
+        sx={{mt: nested ? 0.5 : 0}}
+      >
+        {props.icon ? props.icon : null}
+        <ListItemContent>
+          <Link href={props.route || ""}>
+            <Typography level="title-sm">{props.label}</Typography>
+          </Link>
+        </ListItemContent>
+      </ListItemButton>
+    );
+  };
+
+  return (
+    <ListItem key={label} nested={nested}>
+      {nested ? (
+        <Toggler
+          renderToggle={({open, setOpen}) => {
+            const toggle = () => {
+              setOpen(!open);
+              setOpened(!open);
+            };
+            return (
+              <ListItemButton
+                onClick={toggle}
+                selected={pathname.includes(route) && !opened}
+              >
+                {icon}
+                <ListItemContent>
+                  <Typography level="title-sm">{label}</Typography>
+                </ListItemContent>
+                <KeyboardArrowDownIcon
+                  sx={{transform: open ? "rotate(180deg)" : "none"}}
+                />
+              </ListItemButton>
+            );
+          }}
+        >
+          <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
+        </Toggler>
+      ) : (
+        renderComponent(menu)
+      )}
+    </ListItem>
+  );
+};
+
 const menus: MenusType = [
   {label: "Home", route: "/", icon: <HomeRoundedIcon />},
   {
     label: "Produk",
-    route: "/",
+    route: "/products",
     icon: <DashboardRoundedIcon />,
     child: CATEGORIES.map(({route, name}) => ({
       label: name,
@@ -36,11 +100,9 @@ const menus: MenusType = [
     })),
   },
 ];
-
 interface Props {
   session: SessionType;
 }
-
 const emptyUser = {email: "", name: ""};
 
 const Sidebar: React.FC<Props> = ({session}) => {
@@ -65,48 +127,60 @@ const Sidebar: React.FC<Props> = ({session}) => {
     }
   };
 
-  const renderMenu = (menu: MenuType) => {
-    const {label, icon, child = []} = menu;
-    const nested = Boolean(Array.isArray(child) && child.length > 0);
+  // const renderMenu = (menu: MenuType) => {
+  //   const {label, icon, child = []} = menu;
+  //   const nested = Boolean(Array.isArray(child) && child.length > 0);
 
-    const renderComponent = (props: MenuType) => (
-      <ListItemButton
-        selected={pathname === props.route}
-        sx={{mt: nested ? 0.5 : 0}}
-      >
-        {props.icon ? props.icon : null}
-        <ListItemContent>
-          <Link href={props.route || ""}>
-            <Typography level="title-sm">{props.label}</Typography>
-          </Link>
-        </ListItemContent>
-      </ListItemButton>
-    );
+  //   const renderComponent = (props: MenuType) => {
+  //     // initial condition specificly for home route
+  //     let selected = pathname === '/' && pathname === props.route ? true : false
 
-    return (
-      <ListItem key={label} nested={nested}>
-        {nested ? (
-          <Toggler
-            renderToggle={({open, setOpen}) => (
-              <ListItemButton onClick={() => setOpen(!open)}>
-                {icon}
-                <ListItemContent>
-                  <Typography level="title-sm">{label}</Typography>
-                </ListItemContent>
-                <KeyboardArrowDownIcon
-                  sx={{transform: open ? "rotate(180deg)" : "none"}}
-                />
-              </ListItemButton>
-            )}
-          >
-            <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
-          </Toggler>
-        ) : (
-          renderComponent(menu)
-        )}
-      </ListItem>
-    );
-  };
+  //     if(!selected && pathname.includes(props.route)){
+  //       if(!nested){
+  //         selected = true
+  //       } else if(){
+
+  //       }
+  //     }
+
+  //     return (
+  //     <ListItemButton
+  //       selected={pathname.includes(props.route)}
+  //       sx={{mt: nested ? 0.5 : 0}}
+  //     >
+  //       {props.icon ? props.icon : null}
+  //       <ListItemContent>
+  //         <Link href={props.route || ""}>
+  //           <Typography level="title-sm">{props.label}</Typography>
+  //         </Link>
+  //       </ListItemContent>
+  //     </ListItemButton>
+  //   )};
+
+  //   return (
+  //     <ListItem key={label} nested={nested}>
+  //       {nested ? (
+  //         <Toggler
+  //           renderToggle={({open, setOpen}) => (
+  //             <ListItemButton onClick={() => setOpen(!open)}>
+  //               {icon}
+  //               <ListItemContent>
+  //                 <Typography level="title-sm">{label}</Typography>
+  //               </ListItemContent>
+  //               <KeyboardArrowDownIcon
+  //                 sx={{transform: open ? "rotate(180deg)" : "none"}}
+  //               />
+  //             </ListItemButton>
+  //           )}
+  //         >
+  //           <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
+  //         </Toggler>
+  //       ) : (
+  //         renderComponent(menu)
+  //       )}
+  //     </ListItem>
+  //   );
+  // };
 
   return (
     <Sheet
@@ -181,7 +255,9 @@ const Sidebar: React.FC<Props> = ({session}) => {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-          {menus.map((menu) => renderMenu(menu))}
+          {menus.map((menu) => (
+            <Menu key={menu.label} pathname={pathname} menu={menu} />
+          ))}
         </List>
       </Box>
       <Divider />
