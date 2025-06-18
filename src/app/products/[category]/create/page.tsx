@@ -1,17 +1,41 @@
-"use client"
+import type {FC} from "react";
+import View from "./View";
+import {api} from "@/lib/axios";
+import {Color, Size} from "@/types";
 
-import { OBJECT_CATEGORIES_BY_ROUTE } from '@/constant';
-import { Typography } from '@mui/joy';
-import { useParams } from 'next/navigation';
-import type { FC } from 'react';
+const getSizes = async () => {
+  try {
+    const {data} = await api.get("/size");
+    return data;
+  } catch (err) {
+    return [];
+  }
+};
+
+const getColors = async () => {
+  try {
+    const {data} = await api.get("/color");
+    return data;
+  } catch (err) {
+    return [];
+  }
+};
 
 interface Props {}
 
-const CreateProductPage: FC<Props> = ({}) => {
-  const {category}: {category:string}= useParams();
-  const { name: categoryLabel}: {id: number, name: string} = OBJECT_CATEGORIES_BY_ROUTE[category] || "";
-    return (
-      <Typography>{categoryLabel}</Typography>
-    );
-}
-export default CreateProductPage;
+const page: FC<Props> = async () => {
+  const sizes: Size[] = await getSizes();
+  const colors: Color[] = await getColors();
+
+  return (
+    <View
+      sizes={sizes.map(({name, id}) => ({label: name || "", value: id || 0}))}
+      colors={colors.map(({name, id, hexCode}) => ({
+        label: name,
+        value: id,
+        color: hexCode || "",
+      }))}
+    />
+  );
+};
+export default page;

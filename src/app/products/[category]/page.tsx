@@ -5,18 +5,16 @@ import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 
 import {ProductTable, StyledButton, StyledInput} from "@/components";
-import {
-  AddRounded,
-  Search,
-} from "@mui/icons-material";
+import {AddRounded, Search} from "@mui/icons-material";
 import {useParams, useRouter} from "next/navigation";
-import {ENDPOINT_PRODUCT, OBJECT_CATEGORIES_BY_ROUTE} from "@/constant";
+import {ENDPOINT_PRODUCT} from "@/constant";
 import {useFetch} from "@/hooks";
 import {FetchedProducts, FetchProductsParams} from "@/types";
 import {useSearchParams, usePathname} from "next/navigation";
 import {ListItemDecorator, Stack, Tab, TabList, Tabs} from "@mui/joy";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShirt, faUserTie, faGlasses} from "@fortawesome/free-solid-svg-icons";
+import useMasterData from "@/store/useMasterData";
 
 interface Props {}
 interface FilterType {
@@ -34,12 +32,16 @@ const tabs: {id: number; name: string; icon: React.ReactNode}[] = [
 ];
 
 const ProductsPage: FC<Props> = ({}) => {
-  const {category}: {category:string}= useParams();
+  const {category}: {category: string} = useParams();
   const searchParams = useSearchParams();
   const urlSearchParams = searchParams.toString();
   const router = useRouter();
   const pathname: string = usePathname();
-  const {id: categoryId, name: categoryLabel}: {id: number, name: string} = OBJECT_CATEGORIES_BY_ROUTE[category] || "";
+  const {id: categoryId, name: categoryLabel}: {id: number; name: string} =
+    useMasterData().categories.find((e) => e.route === category) || {
+      id: 0,
+      name: "",
+    };
   const searchParamsObject: FetchProductsParams = Object.fromEntries(
     searchParams.entries()
   );
@@ -106,8 +108,8 @@ const ProductsPage: FC<Props> = ({}) => {
   };
 
   const handleCreateProduct = () => {
-    router.push(`${category}/create`)
-  }
+    router.push(`${category}/create`);
+  };
 
   useEffect(() => {
     if (urlSearchParams && fetchedProducts.data) {
@@ -132,31 +134,12 @@ const ProductsPage: FC<Props> = ({}) => {
         <Typography level="h2" component="h1">
           Produk {categoryLabel}
         </Typography>
-        <StyledButton startDecorator={<AddRounded />} onClick={handleCreateProduct}>Produk Baru</StyledButton>
-      </Box>
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          py: 2,
-          display: {xs: "none", sm: "flex"},
-          flexWrap: "wrap",
-          gap: 1.5,
-          "& > *": {
-            minWidth: {xs: "120px", md: "160px"},
-          },
-        }}
-      >
-        <form onSubmit={handleSubmitForm} className="w-full">
-          <StyledInput
-            name="name"
-            label="Cari nama"
-            placeholder="Cari"
-            startDecorator={<Search />}
-            size="sm"
-            onChange={handleChangeSearch}
-            value={filters?.name}
-          />
-        </form>
+        <StyledButton
+          startDecorator={<AddRounded />}
+          onClick={handleCreateProduct}
+        >
+          Produk Baru
+        </StyledButton>
       </Box>
       <Stack spacing={2}>
         <Tabs
@@ -185,6 +168,29 @@ const ProductsPage: FC<Props> = ({}) => {
           </TabList>
         </Tabs>
       </Stack>
+      <Box
+        className="SearchAndFilters-tabletUp"
+        sx={{
+          py: 1,
+          display: {xs: "none", sm: "flex"},
+          flexWrap: "wrap",
+          gap: 1.5,
+          "& > *": {
+            minWidth: {xs: "120px", md: "160px"},
+          },
+        }}
+      >
+        <form onSubmit={handleSubmitForm} className="w-full">
+          <StyledInput
+            name="name"
+            placeholder="Cari nama"
+            startDecorator={<Search />}
+            size="sm"
+            onChange={handleChangeSearch}
+            value={filters?.name}
+          />
+        </form>
+      </Box>
       <ProductTable
         {...{
           ...searchParamsObject,

@@ -10,8 +10,11 @@ export async function GET() {
     const sizes = await prisma.size.findMany();
     return NextResponse.json(sizes, {status: RESPONSE_STATUS_OK});
   } catch (err) {
-    return NextResponse.json(err, {
-      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
-    });
+    return NextResponse.json(
+      {message: "Gagal mengambil data ukuran"},
+      {
+        status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+      }
+    );
   }
 }

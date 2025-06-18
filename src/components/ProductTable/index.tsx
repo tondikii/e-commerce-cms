@@ -109,7 +109,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
   const renderContent = () => {
     if (usedData.length > 0) {
       return usedData.map((row, idx) => {
-        const totalQuantity = row.productUnits.reduce(
+        const productUnits = row?.productUnits || [];
+        const thumbnail = row?.productImages?.[0]?.url;
+        const totalQuantity = productUnits.reduce(
           (acc, product) => acc + product.quantity,
           0
         );
@@ -119,12 +121,14 @@ const ProductTable: React.FC<ProductTableProps> = ({
               <Typography level="body-xs">{row.id}</Typography>
             </td>
             <td>
-              <Image
-                src={row.productImages[0].url}
-                alt={row.name}
-                width={105}
-                height={105}
-              />
+              {thumbnail ? (
+                <Image
+                  src={thumbnail}
+                  alt={row.name}
+                  width={105}
+                  height={105}
+                />
+              ) : null}
             </td>
             <td>
               <Typography level="body-xs">{row.name}</Typography>
@@ -138,7 +142,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     flexDirection: "row",
                   }}
                 >
-                  {row.productUnits.map(({size}) => (
+                  {productUnits.map(({size}) => (
                     <Chip key={size.code}>{size.code}</Chip>
                   ))}
                 </Box>

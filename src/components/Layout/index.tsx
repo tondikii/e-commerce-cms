@@ -44,7 +44,7 @@ const Layout: FC<Props> = ({children}) => {
             display: "flex",
             flexDirection: "column",
             minWidth: 0,
-            height: "100dvh",
+            minHeight: "100dvh",
             gap: 1,
           }}
         >

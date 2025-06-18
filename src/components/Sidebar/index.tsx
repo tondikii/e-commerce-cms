@@ -22,7 +22,7 @@ import {usePathname} from "next/navigation";
 import Swal from "sweetalert2";
 import {signOut} from "next-auth/react";
 import {Toggler} from "../";
-import {CATEGORIES} from "@/constant";
+import useMasterData from "@/store/useMasterData";
 
 interface MenuProps {
   pathname: string;
@@ -43,6 +43,7 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
           (props.route !== "/" && pathname.includes(props.route) && opened)
         }
         sx={{mt: nested ? 0.5 : 0}}
+        disabled={props.disabled}
       >
         {props.icon ? props.icon : null}
         <ListItemContent>
@@ -87,19 +88,6 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
     </ListItem>
   );
 };
-
-const menus: MenusType = [
-  {label: "Home", route: "/", icon: <HomeRoundedIcon />},
-  {
-    label: "Produk",
-    route: "/products",
-    icon: <DashboardRoundedIcon />,
-    child: CATEGORIES.map(({route, name}) => ({
-      label: name,
-      route: `/products/${route}`,
-    })),
-  },
-];
 interface Props {
   session: SessionType;
 }
@@ -107,8 +95,24 @@ const emptyUser = {email: "", name: ""};
 
 const Sidebar: React.FC<Props> = ({session}) => {
   const pathname: string = usePathname();
+  const {categories} = useMasterData();
 
   const user: UserType = session?.user || emptyUser;
+
+  const menus: MenusType = [
+    {label: "Home", route: "/", icon: <HomeRoundedIcon />, disabled: false},
+    {
+      label: "Produk",
+      route: "/products",
+      icon: <DashboardRoundedIcon />,
+      disabled: categories.length < 1,
+      child: categories.map(({route, name}) => ({
+        label: name,
+        route: `/products/${route}`,
+        disabled: false,
+      })),
+    },
+  ];
 
   const handleSignOut = async () => {
     const {isConfirmed} = await Swal.fire({
@@ -126,61 +130,6 @@ const Sidebar: React.FC<Props> = ({session}) => {
       });
     }
   };
-
-  // const renderMenu = (menu: MenuType) => {
-  //   const {label, icon, child = []} = menu;
-  //   const nested = Boolean(Array.isArray(child) && child.length > 0);
-
-  //   const renderComponent = (props: MenuType) => {
-  //     // initial condition specificly for home route
-  //     let selected = pathname === '/' && pathname === props.route ? true : false
-
-  //     if(!selected && pathname.includes(props.route)){
-  //       if(!nested){
-  //         selected = true
-  //       } else if(){
-
-  //       }
-  //     }
-
-  //     return (
-  //     <ListItemButton
-  //       selected={pathname.includes(props.route)}
-  //       sx={{mt: nested ? 0.5 : 0}}
-  //     >
-  //       {props.icon ? props.icon : null}
-  //       <ListItemContent>
-  //         <Link href={props.route || ""}>
-  //           <Typography level="title-sm">{props.label}</Typography>
-  //         </Link>
-  //       </ListItemContent>
-  //     </ListItemButton>
-  //   )};
-
-  //   return (
-  //     <ListItem key={label} nested={nested}>
-  //       {nested ? (
-  //         <Toggler
-  //           renderToggle={({open, setOpen}) => (
-  //             <ListItemButton onClick={() => setOpen(!open)}>
-  //               {icon}
-  //               <ListItemContent>
-  //                 <Typography level="title-sm">{label}</Typography>
-  //               </ListItemContent>
-  //               <KeyboardArrowDownIcon
-  //                 sx={{transform: open ? "rotate(180deg)" : "none"}}
-  //               />
-  //             </ListItemButton>
-  //           )}
-  //         >
-  //           <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
-  //         </Toggler>
-  //       ) : (
-  //         renderComponent(menu)
-  //       )}
-  //     </ListItem>
-  //   );
-  // };
 
   return (
     <Sheet

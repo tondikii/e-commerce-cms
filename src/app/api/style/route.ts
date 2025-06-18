@@ -10,8 +10,11 @@ export async function GET() {
     const styles = await prisma.style.findMany();
     return NextResponse.json(styles, {status: RESPONSE_STATUS_OK});
   } catch (err) {
-    return NextResponse.json(err, {
-      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
-    });
+    return NextResponse.json(
+      {message: "Gagal mengambil data styles"},
+      {
+        status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+      }
+    );
   }
 }

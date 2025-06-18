@@ -10,8 +10,11 @@ export async function GET() {
     const colors = await prisma.color.findMany();
     return NextResponse.json(colors, {status: RESPONSE_STATUS_OK});
   } catch (err) {
-    return NextResponse.json(err, {
-      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
-    });
+    return NextResponse.json(
+      {message: "Gagal mengambil data warna"},
+      {
+        status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+      }
+    );
   }
 }

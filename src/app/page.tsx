@@ -8,6 +8,7 @@ interface Props {}
 
 const HomePage: FC<Props> = async ({}) => {
   const session: SessionType = await getServerSession(authOptions);
+
   return <View session={session} />;
 };
 export default HomePage;

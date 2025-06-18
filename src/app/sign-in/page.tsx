@@ -7,7 +7,7 @@ import {
 import {useUnrequiredAuth} from "@/hooks";
 import {validateEmailFormat} from "@/utils";
 import {Key, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
-import {IconButton} from "@mui/joy";
+import {Box, IconButton} from "@mui/joy";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useMemo, useState, type FC} from "react";
@@ -102,8 +102,8 @@ const SignUpPage: FC<Props> = ({}) => {
         text: message,
         icon: "error",
       });
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,26 +125,35 @@ const SignUpPage: FC<Props> = ({}) => {
       <div className="flex flex-col justify-center items-center bg-secondary rounded-xl w-2/6 p-8 bg-secondary">
         <h1 className="text-3xl font-montserrat font-bold mb-4">MASUK</h1>
         <form onSubmit={onSubmitForm} className="w-full">
-          <StyledInput
-            label="Alamat Email"
-            value={formData.email}
-            onChange={onChange}
-            name="email"
-            errorMessage={errorsForm.email}
-            placeholder="Masukkan alamat email..."
-            startDecorator={<Mail />}
-          />
-          <StyledInput
-            label="Kata Sandi"
-            value={formData.password}
-            onChange={onChange}
-            name="password"
-            errorMessage={errorsForm.password}
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan kata sandi..."
-            startDecorator={<Key />}
-            endDecorator={renderVisibilityPassword()}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              gap: 2,
+            }}
+          >
+            <StyledInput
+              label="Alamat Email"
+              value={formData.email}
+              onChange={onChange}
+              name="email"
+              errorMessage={errorsForm.email}
+              placeholder="Masukkan alamat email..."
+              startDecorator={<Mail />}
+            />
+            <StyledInput
+              label="Kata Sandi"
+              value={formData.password}
+              onChange={onChange}
+              name="password"
+              errorMessage={errorsForm.password}
+              type={showPassword ? "text" : "password"}
+              placeholder="Masukkan kata sandi..."
+              startDecorator={<Key />}
+              endDecorator={renderVisibilityPassword()}
+            />
+          </Box>
           <StyledSubmitButton type="submit" loading={loading}>
             MASUK
           </StyledSubmitButton>

@@ -1,44 +1,45 @@
-import {Select, Option} from "@mui/joy";
-import type {FC} from "react";
-import {CustomTargetType} from "@/types";
-import FormControl from "../FormControl";
+"use client";
+import React, {FC} from "react";
 
-interface Option {
+import Select, {ActionMeta, StylesConfig} from "react-select";
+import {FormControl} from "..";
+
+export interface Option {
   label: string;
-  value: string;
+  value: string | number;
 }
-
 interface Props {
   options: Option[];
+  isClearable?: boolean;
+  isSearchable?: boolean;
+  isDisabled?: boolean;
+  isLoading?: boolean;
   placeholder?: string;
-  onChange: (e: CustomTargetType) => void;
-  name: string;
+  styles?: StylesConfig<any>;
   label?: string;
   errorMessage?: string;
+  size?: "lg" | "sm" | "md";
+  required?: boolean;
+  onChange?: (newValue: Option) => void;
+  value?: Option;
 }
 
-const CustomSelect: FC<Props> = ({
-  options,
-  placeholder = "Pilih salah satu",
-  onChange,
-  name,
+const SelectComponent: FC<Props> = ({
   label,
   errorMessage,
+  size,
+  required,
+  ...props
 }) => {
-  const handleChange = (_: any, value: any) => {
-    onChange({name, value});
-  };
-
   return (
-    <FormControl label={label} errorMessage={errorMessage}>
-      <Select size="lg" placeholder={placeholder} onChange={handleChange}>
-        {options.map(({label, value}, idx) => (
-          <Option key={idx + 1} value={value}>
-            {label}
-          </Option>
-        ))}
-      </Select>
+    <FormControl
+      label={label}
+      errorMessage={errorMessage}
+      size={size}
+      required={required}
+    >
+      <Select {...props} />
     </FormControl>
   );
 };
-export default CustomSelect;
+export default SelectComponent;

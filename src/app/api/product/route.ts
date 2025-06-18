@@ -4,23 +4,38 @@ import {
   DEFAULT_CATEGORY_ID,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
+  DEFAULT_PRODUCT_IMAGES,
   DEFAULT_STYLE_ID,
   RESPONSE_STATUS_CREATED,
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
   RESPONSE_STATUS_OK,
 } from "@/constant";
 import {Prisma} from "@prisma/client";
+import {api} from "@/lib/axios";
 
 export async function POST(request: Request) {
   try {
-    const body: Prisma.ProductCreateInput = await request.json();
-    const product = await prisma.product.create({data: body});
+    const body: {
+      product: Prisma.ProductCreateInput;
+      productImages: Prisma.ProductImageCreateManyInput[];
+      productUnits: Prisma.ProductUnitCreateManyInput[];
+    } = await request.json();
+    const product = await prisma.product.create({data: body.product});
+    const productImages = body.productImages.map((e) => ({
+      ...e,
+      productId: product.id,
+    }));
+    const productUnits = body.productUnits.map((e) => ({
+      ...e,
+      productId: product.id,
+    }));
+    await api.post("/product-image", productImages);
+    await api.post("/product-unit", productUnits);
     return NextResponse.json(product, {status: RESPONSE_STATUS_CREATED});
   } catch (err) {
-    return NextResponse.json(
-      {err},
-      {status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR}
-    );
+    return NextResponse.json(err, {
+      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+    });
   }
 }
 

@@ -15,6 +15,7 @@ interface Props {
   startDecorator?: React.ReactNode;
   errorMessage?: string;
   endDecorator?: React.ReactNode;
+  required?: boolean;
 }
 
 const customSx = {
@@ -40,9 +41,15 @@ const StyledInput: FC<Props> = ({
   startDecorator,
   errorMessage,
   endDecorator,
+  required,
 }) => {
   return (
-    <FormControl label={label} errorMessage={errorMessage} size={size}>
+    <FormControl
+      label={label}
+      errorMessage={errorMessage}
+      size={size}
+      required={required}
+    >
       <Input
         type={type}
         name={name}

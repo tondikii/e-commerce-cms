@@ -1,4 +1,3 @@
-export {default as Select} from "./Select";
 export {default as StyledInput} from "./StyledInput";
 export {default as StyledTextarea} from "./StyledTextarea";
 export {default as FormControl} from "./FormControl";
@@ -13,3 +12,10 @@ export {default as Layout} from "./Layout";
 export {default as Provider} from "./Provider";
 export {default as Toggler} from "./Toggler";
 export {default as StyledButton} from "./StyledButton";
+export {default as NumericFormatInput} from "./NumericFormatInput";
+export {default as RadioGroupSizes} from "./RadioGroupSizes";
+export {default as RadioGroupColors} from "./RadioGroupColors";
+export {default as Select} from "./Select";
+export {default as InputNumber} from "./InputNumber";
+export {default as RadioGroupStyles} from "./RadioGroupStyles";
+export {default as SelectColors} from "./SelectColors";

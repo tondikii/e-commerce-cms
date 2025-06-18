@@ -3,6 +3,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
 import {Layout, Provider} from "@/components";
+import MasterDataContextProvider from "@/store/MasterDataProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -20,7 +21,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, "bg-white")}>
         <Provider>
-          <Layout>{children}</Layout>
+          <MasterDataContextProvider>
+            <Layout>{children}</Layout>
+          </MasterDataContextProvider>
         </Provider>
       </body>
     </html>

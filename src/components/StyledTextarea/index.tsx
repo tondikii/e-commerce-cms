@@ -13,6 +13,7 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   errorMessage?: string;
   minRows?: number;
+  required?: boolean;
 }
 
 const customSx = {
@@ -36,9 +37,10 @@ const StyledTextarea: FC<Props> = ({
   onChange,
   errorMessage,
   minRows = 2,
+  required,
 }) => {
   return (
-    <FormControl label={label} errorMessage={errorMessage}>
+    <FormControl label={label} errorMessage={errorMessage} required={required}>
       <Textarea
         name={name}
         placeholder={placeholder}

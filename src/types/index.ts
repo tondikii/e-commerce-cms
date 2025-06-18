@@ -20,12 +20,20 @@ export interface MenuType {
   route: string;
   icon?: ReactNode;
   child?: MenuType[];
+  disabled: boolean;
 }
 export type MenusType = MenuType[];
 
 export interface Size {
+  id?: number;
   code: string;
-  label?: string;
+  name?: string;
+}
+
+export interface Color {
+  id: number;
+  name: string;
+  hexCode: string;
 }
 
 export interface ProductImage {
@@ -35,6 +43,7 @@ export interface ProductImage {
 export interface ProductUnit {
   quantity: number;
   size: Size;
+  color: Color;
 }
 
 export interface Product {
@@ -47,8 +56,8 @@ export interface Product {
   updatedAt: string;
   categoryId: number;
   styleId: number;
-  productImages: ProductImage[];
-  productUnits: ProductUnit[];
+  productImages?: ProductImage[];
+  productUnits?: ProductUnit[];
 }
 
 export type Products = Product[];
@@ -65,6 +74,26 @@ export interface FetchedProducts {
     data: Products;
     totalRecords: number;
   } | null;
+  loading: boolean;
+  error: any;
+}
+
+export interface ColourOption {
+  value: number;
+  label: string;
+  color: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  route?: string;
+}
+
+export type Categories = Category[];
+
+export interface FetchedCategories {
+  data: Categories | null;
   loading: boolean;
   error: any;
 }

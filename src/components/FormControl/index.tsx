@@ -11,6 +11,7 @@ interface Props {
   children: React.ReactNode;
   errorMessage?: string;
   size?: "lg" | "sm" | "md";
+  required?: boolean;
 }
 
 const FormControl: FC<Props> = ({
@@ -18,13 +19,14 @@ const FormControl: FC<Props> = ({
   children,
   errorMessage,
   size = "md",
+  required,
 }) => {
-
   return (
     <FormControlMui
-      sx={{marginTop: "1rem", flex: 1}}
+      sx={{flex: 1}}
       error={Boolean(errorMessage)}
       size={size}
+      required={required}
     >
       {label ? <FormLabel>{label}</FormLabel> : null}
       {children}
