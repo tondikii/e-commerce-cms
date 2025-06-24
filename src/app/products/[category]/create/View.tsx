@@ -28,7 +28,7 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
-import {useParams} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {
   ChangeEvent,
   FormEvent,
@@ -99,6 +99,7 @@ const CreateProductView: FC<Props> = ({sizes, colors}) => {
       id: 0,
       name: "",
     };
+  const router = useRouter();
 
   const [formProduct, setFormProduct] =
     useState<FormProduct>(initialFormProduct);
@@ -244,11 +245,19 @@ const CreateProductView: FC<Props> = ({sizes, colors}) => {
 
       const uploadedImagesFile = await uploadImagesFile();
 
-      await api.post("/product", {
+      const {data} = await api.post("/product", {
         product: {...formProduct, categoryId},
         productImages: uploadedImagesFile,
         productUnits: units,
       });
+
+      Swal.fire({
+        title: "Berhasil Buat Produk",
+        text: `Produk ${data?.name} berhasil dibuat`,
+        icon: "success",
+      });
+
+      router.back();
     } catch (err) {
       Swal.fire({
         title: "Gagal Buat Produk",
