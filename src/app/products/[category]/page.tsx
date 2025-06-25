@@ -1,25 +1,20 @@
 "use client";
 
-import React, {ChangeEvent, FC, useEffect, useState} from "react";
+import React, {FC} from "react";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 
-import {ProductTable, StyledButton, StyledInput} from "@/components";
-import {AddRounded, Search} from "@mui/icons-material";
+import {StyledButton, Table} from "@/components";
+import {AddRounded} from "@mui/icons-material";
 import {useParams, useRouter} from "next/navigation";
-import {ENDPOINT_PRODUCT} from "@/constant";
-import {useFetch} from "@/hooks";
-import {FetchedProducts, FetchProductsParams} from "@/types";
-import {useSearchParams, usePathname} from "next/navigation";
+import {useSearchParams} from "@/hooks";
+import {FetchProductsParams} from "@/types";
 import {ListItemDecorator, Stack, Tab, TabList, Tabs} from "@mui/joy";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShirt, faUserTie, faGlasses} from "@fortawesome/free-solid-svg-icons";
 import useMasterData from "@/store/useMasterData";
 
 interface Props {}
-interface FilterType {
-  name: string;
-}
 
 const tabs: {id: number; name: string; icon: React.ReactNode}[] = [
   {
@@ -33,12 +28,11 @@ const tabs: {id: number; name: string; icon: React.ReactNode}[] = [
 
 const ProductsPage: FC<Props> = ({}) => {
   const {category}: {category: string} = useParams();
-  const searchParams = useSearchParams();
-  const urlSearchParams = searchParams.toString();
   const router = useRouter();
-  const pathname: string = usePathname();
+  const {setSearchParams, searchParams} = useSearchParams(router);
+  const categories = useMasterData().categories;
   const {id: categoryId, name: categoryLabel}: {id: number; name: string} =
-    useMasterData().categories.find((e) => e.route === category) || {
+    categories.find((e) => e.route === category) || {
       id: 0,
       name: "",
     };
@@ -54,47 +48,6 @@ const ProductsPage: FC<Props> = ({}) => {
     delete fetchProductsParams.page;
   }
 
-  const [filters, setFilters] = useState<FilterType>({
-    name: searchParamsObject.name || "",
-  });
-  const [refetch, setRefetch] = useState<boolean>(false);
-
-  const fetchedProducts: FetchedProducts = useFetch(ENDPOINT_PRODUCT, {
-    params: fetchProductsParams,
-    refetch,
-    setRefetch,
-  });
-
-  const setSearchParams = ({
-    name,
-    value,
-    resetPagination,
-  }: {
-    name: string;
-    value: string;
-    resetPagination?: boolean;
-  }) => {
-    const params = new URLSearchParams(urlSearchParams);
-    if (value) {
-      params.set(name, value);
-    } else {
-      params.delete(name);
-    }
-    if (name === "limit" || resetPagination) {
-      params.delete("page");
-      if (resetPagination) {
-        params.delete("limit");
-      }
-    }
-
-    router.push(pathname + "?" + params.toString());
-  };
-
-  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const {value} = e.target;
-    setFilters({...filters, name: value});
-  };
-
   const handleChangeTab = (
     e: React.SyntheticEvent | null,
     value: number | string | null
@@ -102,21 +55,9 @@ const ProductsPage: FC<Props> = ({}) => {
     setSearchParams({name: "styleId", value: `${Number(value || 0) + 1}`});
   };
 
-  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSearchParams({name: "name", value: filters.name, resetPagination: true});
-  };
-
   const handleCreateProduct = () => {
     router.push(`${category}/create`);
   };
-
-  useEffect(() => {
-    if (urlSearchParams && fetchedProducts.data) {
-      setRefetch(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlSearchParams]);
 
   return (
     <>
@@ -168,36 +109,8 @@ const ProductsPage: FC<Props> = ({}) => {
           </TabList>
         </Tabs>
       </Stack>
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          py: 1,
-          display: {xs: "none", sm: "flex"},
-          flexWrap: "wrap",
-          gap: 1.5,
-          "& > *": {
-            minWidth: {xs: "120px", md: "160px"},
-          },
-        }}
-      >
-        <form onSubmit={handleSubmitForm} className="w-full">
-          <StyledInput
-            name="name"
-            placeholder="Cari nama"
-            startDecorator={<Search />}
-            size="sm"
-            onChange={handleChangeSearch}
-            value={filters?.name}
-          />
-        </form>
-      </Box>
-      <ProductTable
-        {...{
-          ...searchParamsObject,
-          ...fetchedProducts,
-          setSearchParams,
-        }}
-      />
+
+      <Table entityName="product" prevent={!categoryId} />
     </>
   );
 };

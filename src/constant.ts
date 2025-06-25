@@ -14,7 +14,6 @@ export const DEFAULT_OFFSET = 0;
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_STYLE_ID = 1;
 export const DEFAULT_CATEGORY_ID = 1;
-export const DEFAULT_PRODUCT_IMAGES = []
 
 export const RESPONSE_STATUS_OK = 200;
 export const RESPONSE_STATUS_CREATED = 201;

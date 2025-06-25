@@ -4,8 +4,8 @@ import {
   DEFAULT_CATEGORY_ID,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
-  DEFAULT_PRODUCT_IMAGES,
   DEFAULT_STYLE_ID,
+  RESPONSE_STATUS_BAD_REQUEST,
   RESPONSE_STATUS_CREATED,
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
   RESPONSE_STATUS_OK,
@@ -76,6 +76,26 @@ export async function GET(request: Request) {
       {status: RESPONSE_STATUS_OK}
     );
   } catch (err) {
+    return NextResponse.json(err, {
+      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+    });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const {searchParams} = new URL(request.url);
+    const id = Number(Object.fromEntries(searchParams.entries())?.id);
+    if (!id) {
+      return NextResponse.json(
+        {message: "Missing unique id to do this process"},
+        {status: RESPONSE_STATUS_BAD_REQUEST}
+      );
+    }
+    const deletedProduct = await prisma.product.delete({where: {id}});
+    return NextResponse.json(deletedProduct, {status: RESPONSE_STATUS_OK});
+  } catch (err) {
+    console.log("ERROR TONDIKI", err);
     return NextResponse.json(err, {
       status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
     });
