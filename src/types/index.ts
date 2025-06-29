@@ -37,13 +37,18 @@ export interface Color {
 }
 
 export interface ProductImage {
+  id?: number;
   url: string;
+  colorId: number;
 }
 
 export interface ProductUnit {
+  id?: number;
   quantity: number;
   size: Size;
   color: Color;
+  sizeId?: number;
+  colorId?: number;
 }
 
 export interface Product {

@@ -5,10 +5,11 @@ import {CssVarsProvider} from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 
-import {Sidebar, Header} from "@/components";
+import {Sidebar} from "@/components";
 import {SessionType} from "@/types";
 import {usePathname} from "next/navigation";
 import {useSession} from "next-auth/react";
+import {Header} from "./components";
 
 interface Props {
   // session: SessionType;

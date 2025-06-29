@@ -15,12 +15,14 @@ import Swal from "sweetalert2";
 interface RowMenuProps {
   product: Product;
   entityName: string;
+  router: any;
+  refetch: () => void;
 }
 
-const RowMenu: FC<RowMenuProps> = ({product, entityName}) => {
+const RowMenu: FC<RowMenuProps> = ({product, entityName, router, refetch}) => {
   const handleDeleteProduct = async () => {
     try {
-      const {data} = await api.delete(`/${entityName}`, {
+      await api.delete(`/${entityName}`, {
         params: {id: product.id},
       });
 
@@ -29,6 +31,7 @@ const RowMenu: FC<RowMenuProps> = ({product, entityName}) => {
         text: `Produk ${product.name} berhasil dihapus`,
         icon: "success",
       });
+      refetch();
     } catch (err) {
       Swal.fire({
         title: "Gagal Hapus Produk",
@@ -37,6 +40,11 @@ const RowMenu: FC<RowMenuProps> = ({product, entityName}) => {
       });
     }
   };
+
+  const handleEditProduct = () => {
+    router.push(`${product.categoryId}/edit/${product.id}`);
+  };
+
   return (
     <Dropdown>
       <MenuButton
@@ -46,7 +54,7 @@ const RowMenu: FC<RowMenuProps> = ({product, entityName}) => {
         <MoreHorizRounded />
       </MenuButton>
       <Menu size="sm" sx={{minWidth: 140}}>
-        <MenuItem>Edit</MenuItem>
+        <MenuItem onClick={handleEditProduct}>Edit</MenuItem>
         <Divider />
         <MenuItem color="danger" onClick={handleDeleteProduct}>
           Hapus

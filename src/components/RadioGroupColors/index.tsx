@@ -46,7 +46,7 @@ export default function ExampleProductAttributes() {
                 overlay
                 variant="solid"
                 color={color}
-                checkedIcon={<Done fontSize="xl2" />}
+                checkedIcon={<Done fontSize="large" />}
                 value={color}
                 slotProps={{
                   input: {"aria-label": color},

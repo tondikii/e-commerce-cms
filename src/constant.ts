@@ -20,11 +20,6 @@ export const RESPONSE_STATUS_CREATED = 201;
 export const RESPONSE_STATUS_INTERNAL_SERVER_ERROR = 500;
 export const RESPONSE_STATUS_BAD_REQUEST = 400;
 
-export const ROUTES_BY_CATEGORY_ID: {[key: number]: string} = {
-  1: "top",
-  2: "bottom",
-};
-
 export const STYLES = [
   {
     name: "Casual",

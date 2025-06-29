@@ -55,10 +55,10 @@ async function main() {
   // insert category
   const categories: Prisma.CategoryCreateInput[] = [
     {
-      name: "Top",
+      name: "Atasan",
     },
     {
-      name: "Bottom",
+      name: "Bawahan",
     },
   ];
   const resCategories = await prisma.category.createMany({
@@ -289,42 +289,36 @@ async function main() {
   const productUnits: Prisma.ProductUnitCreateManyInput[] = [
     {
       quantity: 3,
-      code: "P1/S3/C10",
       productId: 1,
       sizeId: 3,
       colorId: 10,
     },
     {
       quantity: 3,
-      code: "P1/S2/C10",
       productId: 1,
       sizeId: 2,
       colorId: 10,
     },
     {
       quantity: 3,
-      code: "P2/S1/C11",
       productId: 2,
       sizeId: 1,
       colorId: 11,
     },
     {
       quantity: 3,
-      code: "P2/S2/C11",
       productId: 2,
       sizeId: 2,
       colorId: 11,
     },
     {
       quantity: 3,
-      code: "P2/S3/C11",
       productId: 2,
       sizeId: 3,
       colorId: 11,
     },
     {
       quantity: 3,
-      code: "P2/S4/C11",
       productId: 2,
       sizeId: 4,
       colorId: 11,

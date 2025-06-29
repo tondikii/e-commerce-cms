@@ -3,7 +3,7 @@ import React, {FC, useEffect, useState} from "react";
 import MasterDataContext from "./MasterDataContext";
 import {Categories, FetchedCategories} from "@/types";
 import {useFetch} from "@/hooks";
-import {ENDPOINT_CATEGORY, ROUTES_BY_CATEGORY_ID} from "@/constant";
+import {ENDPOINT_CATEGORY} from "@/constant";
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ const MasterDataContextProvider: FC<Props> = ({children}) => {
       const data = fetchedCategories.data || [];
       const mappedCategoriesWithRoute = data.map((category) => ({
         ...category,
-        route: ROUTES_BY_CATEGORY_ID[category.id] || "",
+        route: `${category?.id}`,
       }));
       setCategories(mappedCategoriesWithRoute);
     }

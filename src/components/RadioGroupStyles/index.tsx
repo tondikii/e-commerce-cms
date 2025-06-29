@@ -7,6 +7,7 @@ import {CheckCircleRounded} from "@mui/icons-material";
 
 interface Props {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  value: number;
 }
 
 const styles: {id: number; name: string; icon: React.ReactNode}[] = [
@@ -19,7 +20,7 @@ const styles: {id: number; name: string; icon: React.ReactNode}[] = [
   {id: 3, name: "Party", icon: <FontAwesomeIcon icon={faGlasses} />},
 ];
 
-const RadioGroupStyles: FC<Props> = ({onChange}) => {
+const RadioGroupStyles: FC<Props> = ({onChange, value}) => {
   return (
     <RadioGroup
       defaultValue="Website"
@@ -50,6 +51,7 @@ const RadioGroupStyles: FC<Props> = ({onChange}) => {
         alignSelf: "center",
       }}
       onChange={onChange}
+      value={value}
     >
       {styles.map(({id, name, icon}) => (
         <Sheet

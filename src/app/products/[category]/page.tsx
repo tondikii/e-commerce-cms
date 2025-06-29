@@ -1,10 +1,8 @@
 "use client";
 
 import React, {FC} from "react";
-import Box from "@mui/joy/Box";
-import Typography from "@mui/joy/Typography";
 
-import {StyledButton, Table} from "@/components";
+import {PageHeader, StyledButton, Table} from "@/components";
 import {AddRounded} from "@mui/icons-material";
 import {useParams, useRouter} from "next/navigation";
 import {useSearchParams} from "@/hooks";
@@ -56,32 +54,23 @@ const ProductsPage: FC<Props> = ({}) => {
   };
 
   const handleCreateProduct = () => {
-    router.push(`${category}/create`);
+    router.push(`${categoryId}/create`);
   };
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          mb: 1,
-          gap: 1,
-          flexDirection: {xs: "column", sm: "row"},
-          alignItems: {xs: "start", sm: "center"},
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography level="h2" component="h1">
-          Produk {categoryLabel}
-        </Typography>
-        <StyledButton
-          startDecorator={<AddRounded />}
-          onClick={handleCreateProduct}
-        >
-          Produk Baru
-        </StyledButton>
-      </Box>
+      <PageHeader
+        title={`Produk ${categoryLabel}`}
+        rightComponent={
+          <StyledButton
+            startDecorator={<AddRounded />}
+            onClick={handleCreateProduct}
+          >
+            Produk Baru
+          </StyledButton>
+        }
+      />
+
       <Stack spacing={2}>
         <Tabs
           aria-label="Icon tabs"
@@ -110,7 +99,11 @@ const ProductsPage: FC<Props> = ({}) => {
         </Tabs>
       </Stack>
 
-      <Table entityName="product" prevent={!categoryId} />
+      <Table
+        entityName="product"
+        prevent={!categoryId}
+        extraParams={{categoryId}}
+      />
     </>
   );
 };

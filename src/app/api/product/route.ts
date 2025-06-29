@@ -95,7 +95,26 @@ export async function DELETE(request: Request) {
     const deletedProduct = await prisma.product.delete({where: {id}});
     return NextResponse.json(deletedProduct, {status: RESPONSE_STATUS_OK});
   } catch (err) {
-    console.log("ERROR TONDIKI", err);
+    return NextResponse.json(err, {
+      status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
+    });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const {searchParams} = new URL(request.url);
+    const id = Number(Object.fromEntries(searchParams.entries())?.id);
+
+    const body: Prisma.ProductUpdateInput = await request.json();
+
+    const updatedProduct = await prisma.product.update({
+      where: {id},
+      data: body,
+    });
+
+    return NextResponse.json(updatedProduct, {status: RESPONSE_STATUS_OK});
+  } catch (err) {
     return NextResponse.json(err, {
       status: RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
     });

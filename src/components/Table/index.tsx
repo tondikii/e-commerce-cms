@@ -36,11 +36,13 @@ interface FilterType {
 interface TableComponentProps {
   entityName: string;
   prevent: boolean;
+  extraParams?: Object;
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({
   entityName,
   prevent,
+  extraParams = {},
 }) => {
   const router = useRouter();
   const {searchParams, setSearchParams, urlSearchParams} =
@@ -50,7 +52,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
     searchParams.entries()
   );
 
-  const fetchProductsParams = {...searchParamsObject};
+  const fetchProductsParams = {...searchParamsObject, ...extraParams};
   if (fetchProductsParams?.page) {
     fetchProductsParams.offset =
       (fetchProductsParams.page - 1) * (fetchProductsParams?.limit || 5);
@@ -61,6 +63,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
     name: searchParamsObject.name || "",
   });
   const [refetch, setRefetch] = useState<boolean>(false);
+
+  const refetchData = () => {
+    setRefetch(true);
+  };
 
   const fetchedProducts: FetchedProducts = useFetch(`/${entityName}`, {
     params: fetchProductsParams,
@@ -165,7 +171,12 @@ const TableComponent: React.FC<TableComponentProps> = ({
               </Typography>
             </td>
             <td>
-              <RowMenu product={row} entityName={entityName} />
+              <RowMenu
+                product={row}
+                entityName={entityName}
+                router={router}
+                refetch={refetchData}
+              />
             </td>
           </tr>
         );
@@ -200,7 +211,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
   useEffect(() => {
     if (urlSearchParams && data) {
-      setRefetch(true);
+      refetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlSearchParams]);

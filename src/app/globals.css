@@ -48,3 +48,7 @@ body {
 .bg-secondary {
   background-color: var(--secondary-color);
 }
+
+.text-danger {
+  color: #c41c1c;
+}
