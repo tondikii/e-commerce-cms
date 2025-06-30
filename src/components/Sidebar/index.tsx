@@ -108,7 +108,7 @@ const Sidebar: React.FC<Props> = ({session}) => {
       disabled: categories.length < 1,
       child: categories.map(({route, name}) => ({
         label: name,
-        route: `/products/${route}`,
+        route: `products/${route}`,
         disabled: false,
       })),
     },

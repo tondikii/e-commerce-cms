@@ -68,7 +68,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
     setRefetch(true);
   };
 
-  const fetchedProducts: FetchedProducts = useFetch(`/${entityName}`, {
+  const fetchedProducts: FetchedProducts = useFetch(entityName, {
     params: fetchProductsParams,
     refetch,
     setRefetch,

@@ -22,7 +22,7 @@ interface RowMenuProps {
 const RowMenu: FC<RowMenuProps> = ({product, entityName, router, refetch}) => {
   const handleDeleteProduct = async () => {
     try {
-      await api.delete(`/${entityName}`, {
+      await api.delete(entityName, {
         params: {id: product.id},
       });
 

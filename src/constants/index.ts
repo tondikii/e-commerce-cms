@@ -1,4 +1,3 @@
-export const BASE_URL_API_LOCAL = "http://localhost:3000/api";
 export const ENDPOINT_PRODUCT = "/product";
 export const ENDPOINT_CATEGORY = "/category";
 
