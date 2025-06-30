@@ -41,6 +41,6 @@ export const MESSAGES = {
 } as const;
 
 export const API_ENDPOINTS = {
-  UPLOAD_AUTH: "/upload-auth",
-  PRODUCT: "/product",
+  UPLOAD_AUTH: "upload-auth",
+  PRODUCT: "product",
 } as const;

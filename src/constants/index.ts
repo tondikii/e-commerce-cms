@@ -1,5 +1,5 @@
-export const ENDPOINT_PRODUCT = "/product";
-export const ENDPOINT_CATEGORY = "/category";
+export const ENDPOINT_PRODUCT = "product";
+export const ENDPOINT_CATEGORY = "category";
 
 export const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT =

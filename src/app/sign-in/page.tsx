@@ -89,7 +89,7 @@ const SignUpPage: FC<Props> = ({}) => {
       if (signInData?.error) {
         throw new Error(signInData.error);
       }
-      router.push("/");
+      router.push("");
       Swal.fire({
         title: "Berhasil Masuk",
         text: "Selamat bekerja kembali di TokoTrend",

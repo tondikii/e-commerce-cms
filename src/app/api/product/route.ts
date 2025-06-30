@@ -29,8 +29,8 @@ export async function POST(request: Request) {
       ...e,
       productId: product.id,
     }));
-    await api.post("/product-image", productImages);
-    await api.post("/product-unit", productUnits);
+    await api.post("product-image", productImages);
+    await api.post("product-unit", productUnits);
     return NextResponse.json(product, {status: RESPONSE_STATUS_CREATED});
   } catch (err) {
     return NextResponse.json(err, {

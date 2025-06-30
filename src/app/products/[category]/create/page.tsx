@@ -5,7 +5,7 @@ import {Color, Size} from "@/types";
 
 const getSizes = async () => {
   try {
-    const {data} = await api.get("/size");
+    const {data} = await api.get("size");
     return data;
   } catch (err) {
     return [];
@@ -14,7 +14,7 @@ const getSizes = async () => {
 
 const getColors = async () => {
   try {
-    const {data} = await api.get("/color");
+    const {data} = await api.get("color");
     return data;
   } catch (err) {
     return [];

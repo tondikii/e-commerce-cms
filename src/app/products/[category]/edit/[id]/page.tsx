@@ -5,7 +5,7 @@ import {Color, Product, Size} from "@/types";
 
 const getSizes = async () => {
   try {
-    const {data} = await api.get("/size");
+    const {data} = await api.get("size");
     return data;
   } catch (err) {
     return [];
@@ -14,7 +14,7 @@ const getSizes = async () => {
 
 const getColors = async () => {
   try {
-    const {data} = await api.get("/color");
+    const {data} = await api.get("color");
     return data;
   } catch (err) {
     return [];
@@ -23,7 +23,7 @@ const getColors = async () => {
 
 const getProduct = async (id: number) => {
   try {
-    const {data} = await api.get("/product/detail", {params: {id}});
+    const {data} = await api.get("product/detail", {params: {id}});
     return data;
   } catch (err) {
     return [];

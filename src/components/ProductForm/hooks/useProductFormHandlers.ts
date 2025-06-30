@@ -114,13 +114,11 @@ const useProductFormHandlers = ({
             seperateNewAndExistingData(uploadedImages, formProduct.id || 0);
 
           if (newDataImages?.length > 0) {
-            arrPromise.push(await api.post("/product-image", newDataImages));
+            arrPromise.push(await api.post("product-image", newDataImages));
           }
 
           if (existingDataImages?.length > 0) {
-            arrPromise.push(
-              await api.put("/product-image", existingDataImages)
-            );
+            arrPromise.push(await api.put("product-image", existingDataImages));
           }
 
           const deletedDataImages = product?.productImages?.filter((e) => {
@@ -132,7 +130,7 @@ const useProductFormHandlers = ({
 
           if (deletedDataImages && deletedDataImages?.length > 0) {
             arrPromise.push(
-              await api.delete("/product-image", {
+              await api.delete("product-image", {
                 data: {ids: deletedDataImages.map((e) => e.id)},
               })
             );
@@ -144,11 +142,11 @@ const useProductFormHandlers = ({
           );
 
           if (newDataUnits?.length > 0) {
-            arrPromise.push(await api.post("/product-unit", newDataUnits));
+            arrPromise.push(await api.post("product-unit", newDataUnits));
           }
 
           if (existingDataUnits?.length > 0) {
-            arrPromise.push(await api.put("/product-unit", existingDataUnits));
+            arrPromise.push(await api.put("product-unit", existingDataUnits));
           }
 
           const deletedDataUnits = product?.productUnits?.filter((e) => {
@@ -160,7 +158,7 @@ const useProductFormHandlers = ({
 
           if (deletedDataUnits && deletedDataUnits?.length > 0) {
             arrPromise.push(
-              await api.delete("/product-unit", {
+              await api.delete("product-unit", {
                 data: {ids: deletedDataUnits.map((e) => e.id)},
               })
             );
