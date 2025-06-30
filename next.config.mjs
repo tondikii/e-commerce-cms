@@ -1,16 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images:{
-    remotePatterns:  [
+  images: {
+    remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'ik.imagekit.io',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "ik.imagekit.io",
+        port: "",
+        pathname: "/**",
       },
-    ]
+    ],
   },
-  reactStrictMode: false
+  reactStrictMode: false,
+  crossOrigin: "anonymous",
 };
 
 export default nextConfig;
