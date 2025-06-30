@@ -3,9 +3,9 @@
 import {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
-import {STATUS_AUTHENTICATED} from "@/constant";
+import {STATUS_AUTHENTICATED} from "@/constants";
 
-const useUnrequiredAuth = () => {
+const useRedirectIfAuthenticated = () => {
   const {status} = useSession();
   const router = useRouter();
 
@@ -19,4 +19,4 @@ const useUnrequiredAuth = () => {
   return null;
 };
 
-export default useUnrequiredAuth;
+export default useRedirectIfAuthenticated;

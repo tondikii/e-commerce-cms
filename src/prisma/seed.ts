@@ -1,7 +1,7 @@
 import {type Prisma} from "@prisma/client";
 
 import {prisma, bcrypt} from "@/lib";
-import {STYLES} from "@/constant";
+import {STYLES} from "@/constants";
 
 async function main() {
   // insert admin

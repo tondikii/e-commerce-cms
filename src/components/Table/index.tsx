@@ -22,7 +22,7 @@ import {
 import Image from "next/image";
 import {format} from "date-fns";
 import {FetchedProducts, FetchProductsParams, Products} from "@/types";
-import {DEFAULT_LIMIT, DEFAULT_PAGE} from "@/constant";
+import {DEFAULT_LIMIT, DEFAULT_PAGE} from "@/constants";
 import {ScaleLoader} from "react-spinners";
 import {RowMenu} from "./components";
 import {useRouter} from "next/navigation";

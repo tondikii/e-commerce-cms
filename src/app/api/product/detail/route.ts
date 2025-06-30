@@ -3,7 +3,7 @@ import {prisma} from "@/lib";
 import {
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
   RESPONSE_STATUS_OK,
-} from "@/constant";
+} from "@/constants";
 
 export async function GET(request: Request) {
   try {

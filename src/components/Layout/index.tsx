@@ -12,7 +12,6 @@ import {useSession} from "next-auth/react";
 import {Header} from "./components";
 
 interface Props {
-  // session: SessionType;
   children: ReactNode;
 }
 

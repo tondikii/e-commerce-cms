@@ -9,7 +9,7 @@ import {
   RESPONSE_STATUS_CREATED,
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
   RESPONSE_STATUS_OK,
-} from "@/constant";
+} from "@/constants";
 import {Prisma} from "@prisma/client";
 import {api} from "@/lib/axios";
 

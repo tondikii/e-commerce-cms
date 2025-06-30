@@ -3,8 +3,8 @@ import {CopyRight, StyledSubmitButton, StyledInput} from "@/components";
 import {
   MAX_VARCHAR_LENGTH,
   RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT,
-} from "@/constant";
-import {useUnrequiredAuth} from "@/hooks";
+} from "@/constants";
+import {useRedirectIfAuthenticated} from "@/hooks";
 import {validateEmailFormat} from "@/utils";
 import {Key, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
 import {Box, IconButton} from "@mui/joy";
@@ -34,7 +34,7 @@ const SignUpPage: FC<Props> = ({}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // direct to home if have session
-  useUnrequiredAuth();
+  useRedirectIfAuthenticated();
 
   const {errorsForm, isValidForm} = useMemo(() => {
     const errorsForm: FormSignInType = {...initialFormSignIn};

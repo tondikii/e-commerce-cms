@@ -5,7 +5,7 @@ import {
   RESPONSE_STATUS_CREATED,
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
   RESPONSE_STATUS_OK,
-} from "@/constant";
+} from "@/constants";
 import {NextResponse} from "next/server";
 
 export async function POST(request: Request) {
