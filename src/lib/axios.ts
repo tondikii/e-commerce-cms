@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: process.env.BASE_URL_API,
+  baseURL: "/api/",
   timeout: 325000,
   headers: {"X-Requested-With": "XMLHttpRequest"},
 });

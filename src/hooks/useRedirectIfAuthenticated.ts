@@ -11,7 +11,7 @@ const useRedirectIfAuthenticated = () => {
 
   useEffect(() => {
     if (status === STATUS_AUTHENTICATED) {
-      router.push("");
+      router.push("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
