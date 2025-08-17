@@ -1,12 +1,9 @@
-import type {FC} from "react";
 import View from "./View";
 import {api} from "@/lib/axios";
 import {Color, Product, Size} from "@/types";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
+interface Props {
+  params: Promise<{id: string}>;
 }
 
 const getSizes = async (): Promise<Size[]> => {
@@ -29,6 +26,9 @@ const getColors = async (): Promise<Color[]> => {
 
 const getProduct = async (id: number): Promise<Product | null> => {
   try {
+    if (!id) {
+      return null;
+    }
     const {data} = await api.get<Product>("product/detail", {params: {id}});
     return data;
   } catch (err) {
@@ -36,11 +36,11 @@ const getProduct = async (id: number): Promise<Product | null> => {
   }
 };
 
-const Page = async ({params}: PageProps) => {
-  const paramsId = Number(params?.id) || 0;
+const Page = async ({params}: Props) => {
+  const {id} = (await params) || {};
   const sizes = await getSizes();
   const colors = await getColors();
-  const product = await getProduct(paramsId);
+  const product = await getProduct(Number(id));
 
   if (!product) {
     return <div>Product not found</div>;
