@@ -16,6 +16,7 @@ interface Props {
   errorMessage?: string;
   endDecorator?: React.ReactNode;
   required?: boolean;
+  maxLength?: number;
 }
 
 const customSx = {
@@ -42,7 +43,16 @@ const StyledInput: FC<Props> = ({
   errorMessage,
   endDecorator,
   required,
+  maxLength = 255, // Default maxLength
 }) => {
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (maxLength && e.target.value.length > maxLength) {
+      e.target.value = e.target.value.slice(0, maxLength);
+    }
+    onChange(e);
+  }
+
   return (
     <FormControl
       label={label}
@@ -57,7 +67,7 @@ const StyledInput: FC<Props> = ({
         sx={sx}
         size={size}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         startDecorator={startDecorator}
         endDecorator={endDecorator}
       />

@@ -1,7 +1,6 @@
 // constants/product-form.constants.ts
 
 import {UnitInput, FormProduct} from "../types";
-import {MAX_VARCHAR_LENGTH} from "@/constants";
 
 export const INITIAL_UNIT: UnitInput = {
   quantity: 0,
@@ -16,11 +15,6 @@ export const INITIAL_FORM_PRODUCT: FormProduct = {
   description: "",
   price: "",
 };
-
-export const FORM_LIMITS = {
-  name: 50,
-  default: MAX_VARCHAR_LENGTH,
-} as const;
 
 export const MESSAGES = {
   SUCCESS: {

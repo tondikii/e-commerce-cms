@@ -1,7 +1,6 @@
 "use client";
 import {CopyRight, StyledSubmitButton, StyledInput} from "@/components";
 import {
-  MAX_VARCHAR_LENGTH,
   RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT,
 } from "@/constants";
 import {useRedirectIfAuthenticated} from "@/hooks";
@@ -62,15 +61,7 @@ const SignUpPage: FC<Props> = ({}) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
-    let maxLength: number = MAX_VARCHAR_LENGTH;
-    if (name === "postalCode") {
-      maxLength = 5;
-    }
-    if (value?.length <= maxLength) {
-      setFormData({...formData, [name]: value});
-    } else {
-      setFormData({...formData, [name]: value.slice(0, maxLength)});
-    }
+    setFormData({...formData, [name]: value});
   };
 
   const onSubmitForm = async (event: React.FormEvent<HTMLFormElement>) => {

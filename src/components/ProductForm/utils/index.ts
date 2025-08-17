@@ -3,7 +3,7 @@
 import {upload} from "@imagekit/next";
 import {api} from "@/lib/axios";
 import {AuthParams} from "../types";
-import {FORM_LIMITS, API_ENDPOINTS} from "../constants";
+import { API_ENDPOINTS} from "../constants";
 
 /**
  * Generate product code based on size and color IDs
@@ -13,15 +13,6 @@ export const generateProductCode = (
   colorId: number
 ): string => {
   return `S${sizeId}/C${colorId}`;
-};
-
-/**
- * Get field character limit
- */
-export const getFieldLimit = (fieldName: string): number => {
-  return (
-    FORM_LIMITS[fieldName as keyof typeof FORM_LIMITS] || FORM_LIMITS.default
-  );
 };
 
 /**
@@ -45,21 +36,6 @@ export const handleFileUpload = async (file?: File | null): Promise<string> => {
   } catch (error) {
     throw new Error("Failed to upload file");
   }
-};
-
-/**
- * Validate form field value and apply limits
- */
-export const validateAndLimitField = (
-  fieldName: string,
-  value: string
-): string | number => {
-  const limit = getFieldLimit(fieldName);
-  const truncatedValue = value.length <= limit ? value : value.slice(0, limit);
-
-  return ["styleId", "price"].includes(fieldName)
-    ? Number(truncatedValue)
-    : truncatedValue;
 };
 
 /**

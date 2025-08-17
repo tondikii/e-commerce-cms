@@ -8,7 +8,6 @@ const getSizes = async () => {
     const {data} = await api.get("size");
     return data;
   } catch (err) {
-    console.log("ERR sizes", err);
     return [];
   }
 };
@@ -18,7 +17,6 @@ const getColors = async () => {
     const {data} = await api.get("color");
     return data;
   } catch (err) {
-    console.log("ERR colors", err);
     return [];
   }
 };

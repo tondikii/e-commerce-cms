@@ -35,9 +35,10 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
 
   const [opened, setOpened] = React.useState<boolean>(false);
 
-  const renderComponent = (props: MenuType) => {
+  const renderMenu = (props: MenuType) => {
     return (
       <ListItemButton
+      key={props.route}
         selected={
           pathname === props.route ||
           (props.route !== "/" && pathname.includes(props.route) && opened)
@@ -47,7 +48,7 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
       >
         {props.icon ? props.icon : null}
         <ListItemContent>
-          <Link href={props.route || ""}>
+          <Link href={props.route}>
             <Typography level="title-sm">{props.label}</Typography>
           </Link>
         </ListItemContent>
@@ -80,10 +81,10 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
             );
           }}
         >
-          <List>{child.map((menuChild) => renderComponent(menuChild))}</List>
+          <List>{child.map((menuChild) => renderMenu(menuChild))}</List>
         </Toggler>
       ) : (
-        renderComponent(menu)
+        renderMenu(menu)
       )}
     </ListItem>
   );
@@ -108,7 +109,7 @@ const Sidebar: React.FC<Props> = ({session}) => {
       disabled: categories.length < 1,
       child: categories.map(({route, name}) => ({
         label: name,
-        route: `products/${route}`,
+        route: `/products/${route}`,
         disabled: false,
       })),
     },

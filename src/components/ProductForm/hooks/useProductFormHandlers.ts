@@ -14,7 +14,6 @@ import {
 import {
   handleFileUpload,
   generateProductCode,
-  validateAndLimitField,
   createPreviewUrl,
   seperateNewAndExistingData,
 } from "../utils";
@@ -57,12 +56,15 @@ const useProductFormHandlers = ({
   // Form field change handler
   const handleFormChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const {name, value} = e.target;
-      const processedValue = validateAndLimitField(name, value);
+      let {name, value} : {name: string, value:string | number} = e.target;
+
+      if(name === 'price' || name === 'styleId') {
+        value = Number(value)
+      }
 
       setFormProduct((prev) => ({
         ...prev,
-        [name]: processedValue,
+        [name]: value,
       }));
     },
     [setFormProduct]

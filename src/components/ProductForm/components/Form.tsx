@@ -144,6 +144,7 @@ const FormComponent: FC<ProductFormProps> = ({
                 name="name"
                 required
                 placeholder="Masukkan nama produk"
+                maxLength={50}
               />
               <StyledTextarea
                 label="Deskripsi"
