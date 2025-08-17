@@ -32,11 +32,11 @@ const getProduct = async (id: number) => {
 };
 
 const page: FC<PageProps> = async (props) => {
-  const params = props.params;
+  const paramsId: number = Number(props?.params?.id) || 0;
   const sizes: Size[] = await getSizes();
   const colors: Color[] = await getColors();
 
-  const product: Product = await getProduct(Number(params.id));
+  const product: Product = await getProduct(paramsId);
 
   return (
     <View
