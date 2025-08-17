@@ -2,6 +2,7 @@ import type {FC} from "react";
 import View from "./View";
 import {api} from "@/lib/axios";
 import {Color, Product, Size} from "@/types";
+import {PageProps} from "../../../../../../.next/types/app/page";
 
 const getSizes = async () => {
   try {
@@ -30,14 +31,8 @@ const getProduct = async (id: number) => {
   }
 };
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-const page: FC<Props> = async props => {
-  const params = await props.params;
+const page: FC<PageProps> = async (props) => {
+  const params = props.params;
   const sizes: Size[] = await getSizes();
   const colors: Color[] = await getColors();
 
