@@ -1,6 +1,7 @@
 import {type Prisma} from "@prisma/client";
 
-import {prisma, bcrypt} from "@/lib";
+import prisma from "@/lib/prisma";
+import {hashPassword} from "@/lib/password";
 import {STYLES} from "@/constants";
 
 async function main() {
@@ -9,14 +10,14 @@ async function main() {
     {
       email: "rika@gmail.com",
       name: "Rika",
-      password: await bcrypt.hashPassword("password"),
+      password: await hashPassword("password"),
       phoneNumber: "081511791945",
       role: "admin",
     },
     {
       email: "raka@gmail.com",
       name: "Raka",
-      password: await bcrypt.hashPassword("password"),
+      password: await hashPassword("password"),
       phoneNumber: "081511791946",
       role: "admin",
     },

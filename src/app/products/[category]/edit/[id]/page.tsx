@@ -36,7 +36,8 @@ interface Props {
   };
 }
 
-const page: FC<Props> = async ({params}) => {
+const page: FC<Props> = async props => {
+  const params = await props.params;
   const sizes: Size[] = await getSizes();
   const colors: Color[] = await getColors();
 

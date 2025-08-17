@@ -9,7 +9,7 @@ interface Props {
 }
 
 // eslint-disable-next-line @next/next/no-async-client-component
-const HomePageComponent: FC<Props> = async ({session}) => {
+const HomePageComponent: FC<Props> = ({session}) => {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <Image

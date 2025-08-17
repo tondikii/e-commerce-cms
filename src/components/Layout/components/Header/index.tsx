@@ -22,18 +22,9 @@ export default function Header() {
         borderBottom: "1px solid",
         borderColor: "background.level1",
         boxShadow: "sm",
+        "--Header-height": {xs: "52px", md: "0px"},
       }}
     >
-      <GlobalStyles
-        styles={(theme) => ({
-          ":root": {
-            "--Header-height": "52px",
-            [theme.breakpoints.up("md")]: {
-              "--Header-height": "0px",
-            },
-          },
-        })}
-      />
       <IconButton
         onClick={() => toggleSidebar()}
         variant="outlined"

@@ -38,7 +38,7 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
   const renderMenu = (props: MenuType) => {
     return (
       <ListItemButton
-      key={props.route}
+        key={props.route}
         selected={
           pathname === props.route ||
           (props.route !== "/" && pathname.includes(props.route) && opened)
@@ -153,18 +153,9 @@ const Sidebar: React.FC<Props> = ({session}) => {
         gap: 2,
         borderRight: "1px solid",
         borderColor: "divider",
+        "--Sidebar-width": {xs: "220px", lg: "240px"},
       }}
     >
-      <GlobalStyles
-        styles={(theme) => ({
-          ":root": {
-            "--Sidebar-width": "220px",
-            [theme.breakpoints.up("lg")]: {
-              "--Sidebar-width": "240px",
-            },
-          },
-        })}
-      />
       <Box
         className="Sidebar-overlay"
         sx={{

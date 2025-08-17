@@ -1,7 +1,9 @@
 import {PrismaAdapter} from "@next-auth/prisma-adapter";
 import {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {bcrypt, prisma} from "./";
+
+import prisma from "./prisma";
+import {verifyPassword} from "./password";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -43,10 +45,7 @@ export const authOptions: NextAuthOptions = {
         if (!user) {
           throw new Error("Email tidak ditemukan");
         }
-        const isValidPassword = await bcrypt.comparePassword(
-          password,
-          user.password
-        );
+        const isValidPassword = await verifyPassword(password, user.password);
         if (!isValidPassword) {
           throw new Error("Password tidak sesuai");
         }
