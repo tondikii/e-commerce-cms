@@ -2,41 +2,47 @@ import type {FC} from "react";
 import View from "./View";
 import {api} from "@/lib/axios";
 import {Color, Product, Size} from "@/types";
-import {PageProps} from "../../../../../../.next/types/app/page";
 
-const getSizes = async () => {
+interface Props {
+  params: {
+    id: string;
+    category: string;
+  };
+}
+
+const getSizes = async (): Promise<Size[]> => {
   try {
-    const {data} = await api.get("size");
+    const {data} = await api.get<Size[]>("size");
     return data;
   } catch (err) {
     return [];
   }
 };
 
-const getColors = async () => {
+const getColors = async (): Promise<Color[]> => {
   try {
-    const {data} = await api.get("color");
+    const {data} = await api.get<Color[]>("color");
     return data;
   } catch (err) {
     return [];
   }
 };
 
-const getProduct = async (id: number) => {
+const getProduct = async (id: number): Promise<Product | null> => {
   try {
-    const {data} = await api.get("product/detail", {params: {id}});
+    const {data} = await api.get<Product>("product/detail", {params: {id}});
     return data;
   } catch (err) {
-    return [];
+    return null;
   }
 };
 
-const page: FC<PageProps> = async (props) => {
-  const paramsId: number = Number(props?.params?.id) || 0;
+const page: FC<Props> = async ({params}) => {
+  const paramsId: number = Number(params?.id) || 0;
   const sizes: Size[] = await getSizes();
   const colors: Color[] = await getColors();
 
-  const product: Product = await getProduct(paramsId);
+  const product: Product | null = await getProduct(paramsId);
 
   return (
     <View

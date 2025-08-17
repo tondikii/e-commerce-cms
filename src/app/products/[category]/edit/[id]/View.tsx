@@ -8,7 +8,7 @@ import {PageHeader, ProductForm} from "@/components";
 interface Props {
   sizes: {label: string; value: number}[];
   colors: ColourOption[];
-  product: Product;
+  product: Product | null;
 }
 const EditProductView: FC<Props> = ({sizes, colors, product}) => {
   const {category}: {category: string} = useParams();

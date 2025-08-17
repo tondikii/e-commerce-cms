@@ -7,7 +7,7 @@ export interface ProductFormProps {
   colors: ColourOption[];
   categoryId: number;
   mode?: "create" | "edit";
-  product?: Product;
+  product?: Product | null;
 }
 
 export interface AuthParams {
