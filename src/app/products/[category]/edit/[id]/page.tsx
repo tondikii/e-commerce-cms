@@ -3,10 +3,9 @@ import View from "./View";
 import {api} from "@/lib/axios";
 import {Color, Product, Size} from "@/types";
 
-interface Props {
+interface PageProps {
   params: {
     id: string;
-    category: string;
   };
 }
 
@@ -37,12 +36,15 @@ const getProduct = async (id: number): Promise<Product | null> => {
   }
 };
 
-const page: FC<Props> = async ({params}) => {
-  const paramsId: number = Number(params?.id) || 0;
-  const sizes: Size[] = await getSizes();
-  const colors: Color[] = await getColors();
+const Page = async ({params}: PageProps) => {
+  const paramsId = Number(params?.id) || 0;
+  const sizes = await getSizes();
+  const colors = await getColors();
+  const product = await getProduct(paramsId);
 
-  const product: Product | null = await getProduct(paramsId);
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
     <View
@@ -56,4 +58,5 @@ const page: FC<Props> = async ({params}) => {
     />
   );
 };
-export default page;
+
+export default Page;
