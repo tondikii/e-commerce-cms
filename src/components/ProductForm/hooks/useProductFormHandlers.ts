@@ -31,8 +31,8 @@ interface UseProductFormHandlersProps {
   mode: "create" | "edit";
   uploadingPhotoColorId: number;
   setUploadingPhotoColorId: React.Dispatch<React.SetStateAction<number>>;
-  fileInputRef: React.RefObject<HTMLInputElement>;
-  product?: Product;
+  fileInputRef: any;
+  product?: Product | null;
 }
 
 const useProductFormHandlers = ({
@@ -56,10 +56,10 @@ const useProductFormHandlers = ({
   // Form field change handler
   const handleFormChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      let {name, value} : {name: string, value:string | number} = e.target;
+      let {name, value}: {name: string; value: string | number} = e.target;
 
-      if(name === 'price' || name === 'styleId') {
-        value = Number(value)
+      if (name === "price" || name === "styleId") {
+        value = Number(value);
       }
 
       setFormProduct((prev) => ({
