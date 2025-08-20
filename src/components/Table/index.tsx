@@ -18,6 +18,7 @@ import {
   KeyboardArrowRight,
   KeyboardArrowLeft,
   Search,
+  AddRounded,
 } from "@mui/icons-material";
 import Image from "next/image";
 import {format} from "date-fns";
@@ -26,8 +27,9 @@ import {DEFAULT_LIMIT, DEFAULT_PAGE} from "@/constants";
 import {ScaleLoader} from "react-spinners";
 import {RowMenu} from "./components";
 import {useRouter} from "next/navigation";
-import {useFetch, useSearchParams} from "@/hooks";
+import {useDebounce, useFetch, useSearchParams} from "@/hooks";
 import StyledInput from "../StyledInput";
+import {StyledButton} from "..";
 
 interface FilterType {
   name: string;
@@ -35,14 +37,16 @@ interface FilterType {
 
 interface TableComponentProps {
   entityName: string;
-  prevent: boolean;
+  prevent?: boolean;
   extraParams?: Object;
+  title: string;
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({
   entityName,
   prevent,
   extraParams = {},
+  title,
 }) => {
   const router = useRouter();
   const {searchParams, setSearchParams, urlSearchParams} =
@@ -63,6 +67,8 @@ const TableComponent: React.FC<TableComponentProps> = ({
     name: searchParamsObject.name || "",
   });
   const [refetch, setRefetch] = useState<boolean>(false);
+
+  const debouncedSearchTerm = useDebounce<string>(filters.name, 1000);
 
   const refetchData = () => {
     setRefetch(true);
@@ -91,9 +97,13 @@ const TableComponent: React.FC<TableComponentProps> = ({
     setFilters({...filters, name: value});
   };
 
+  const handleSearchName = () => {
+    setSearchParams({name: "name", value: filters.name, resetPagination: true});
+  };
+
   const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSearchParams({name: "name", value: filters.name, resetPagination: true});
+    handleSearchName;
   };
 
   const handleChangeRowsPerPage = async (
@@ -113,6 +123,10 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
   const handleChangePage = (newPage: number) => {
     setSearchParams({name: "page", value: newPage.toString()});
+  };
+
+  const handleCreateProduct = () => {
+    router.push("/create");
   };
 
   const renderContent = () => {
@@ -216,44 +230,73 @@ const TableComponent: React.FC<TableComponentProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlSearchParams]);
 
+  useEffect(() => {
+    if (debouncedSearchTerm.trim() !== "") {
+      handleSearchName;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm]);
+
   return (
-    <>
+    <Sheet
+      className="OrderTableContainer"
+      variant="outlined"
+      sx={{
+        // width: "100%",
+        borderRadius: "sm",
+        // overflow: "auto",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          borderBottom: "1px solid var(--joy-palette-neutral-200)",
+          paddingY: "1rem",
+          paddingX: "1.5rem",
+        }}
+      >
+        <Typography
+          level="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "var(--joy-palette-text-primary)",
+          }}
+        >
+          {title}
+        </Typography>
+      </Box>
+
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
-          py: 1,
-          display: {xs: "none", sm: "flex"},
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: 1.5,
-          "& > *": {
-            minWidth: {xs: "120px", md: "160px"},
-          },
+          padding: "1.5rem",
         }}
       >
-        <form onSubmit={handleSubmitForm} className="w-full">
+        <form onSubmit={handleSubmitForm}>
           <StyledInput
             name="name"
-            placeholder="Cari nama"
+            placeholder={"Cari nama..."}
             startDecorator={<Search />}
-            size="sm"
+            size="md"
             onChange={handleChangeSearch}
             value={filters?.name}
           />
         </form>
+
+        <StyledButton
+          startDecorator={<AddRounded />}
+          onClick={handleCreateProduct}
+        >
+          Produk Baru
+        </StyledButton>
       </Box>
-      <Sheet
-        className="OrderTableContainer"
-        variant="outlined"
-        sx={{
-          display: {xs: "none", sm: "initial"},
-          width: "100%",
-          borderRadius: "sm",
-          flexShrink: 1,
-          overflow: "auto",
-          minHeight: 0,
-          marginBottom: "2rem",
-        }}
-      >
+
+      <Box sx={{overflow: "auto"}}>
         <Table
           aria-labelledby="tableTitle"
           stickyHeader
@@ -339,8 +382,8 @@ const TableComponent: React.FC<TableComponentProps> = ({
             </tr>
           </tfoot>
         </Table>
-      </Sheet>
-    </>
+      </Box>
+    </Sheet>
   );
 };
 

@@ -12,3 +12,6 @@ const useMasterData = () => {
 };
 
 export default useMasterData;
+
+// sample usage context on client
+// const categories = useMasterData().categories;

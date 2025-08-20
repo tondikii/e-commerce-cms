@@ -1,13 +1,12 @@
 "use client";
 import * as React from "react";
-import GlobalStyles from "@mui/joy/GlobalStyles";
 import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
-import ListItemButton, {listItemButtonClasses} from "@mui/joy/ListItemButton";
+import ListItemButton from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
@@ -15,14 +14,11 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {closeSidebar, getInitialsName} from "../utils";
+import {getInitialsName} from "../utils";
 import {MenusType, MenuType, SessionType, UserType} from "@/types";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import Swal from "sweetalert2";
-import {signOut} from "next-auth/react";
-import {Toggler} from "../";
-import useMasterData from "@/store/useMasterData";
+import {motion, AnimatePresence} from "framer-motion";
 
 interface MenuProps {
   pathname: string;
@@ -30,196 +26,277 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
-  const {label, icon, child = [], route} = menu;
+  const {label, child = [], route} = menu;
   const nested = Boolean(Array.isArray(child) && child.length > 0);
+  const isOpened = pathname.includes(route) && nested;
 
-  const [opened, setOpened] = React.useState<boolean>(false);
+  const renderMenu = (menuItem: MenuType, isChild = false) => {
+    const isSelectedChild = pathname === menuItem.route;
+    const hasChildren =
+      Array.isArray(menuItem.child) && menuItem.child.length > 0;
 
-  const renderMenu = (props: MenuType) => {
+    const renderIcon = () => {
+      if (React.isValidElement<{sx?: object}>(menuItem?.icon)) {
+        return React.cloneElement(menuItem?.icon, {
+          sx: {
+            color: isSelectedChild
+              ? "var(--joy-palette-primary-500)"
+              : "var(--joy-palette-neutral-500)",
+            transition: "color 0.2s",
+          },
+        });
+      }
+      return null;
+    };
+
     return (
       <ListItemButton
-        key={props.route}
-        selected={
-          pathname === props.route ||
-          (props.route !== "/" && pathname.includes(props.route) && opened)
-        }
-        sx={{mt: nested ? 0.5 : 0}}
-        disabled={props.disabled}
+        key={menuItem.route}
+        selected={isSelectedChild}
+        component={motion.div}
+        whileHover={{scale: 1.02}}
+        sx={{
+          mt: isChild ? 0.5 : 0,
+          borderRadius: "md",
+          px: 2,
+          backgroundColor: isSelectedChild
+            ? "var(--joy-palette-primary-50)"
+            : "transparent",
+          "&:hover": {
+            backgroundColor: isSelectedChild
+              ? "var(--joy-palette-primary-100)"
+              : "var(--joy-palette-neutral-100)",
+          },
+          transition: "all 0.2s ease",
+        }}
       >
-        {props.icon ? props.icon : null}
-        <ListItemContent>
-          <Link href={props.route}>
-            <Typography level="title-sm">{props.label}</Typography>
-          </Link>
-        </ListItemContent>
+        <Link
+          href={menuItem.route}
+          passHref
+          style={{
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            gap: "12px",
+          }}
+        >
+          {renderIcon()}
+          <ListItemContent>
+            <Typography
+              level="title-sm"
+              sx={{
+                color: isSelectedChild
+                  ? "var(--joy-palette-primary-700)"
+                  : "var(--joy-palette-neutral-800)",
+                fontWeight: isSelectedChild ? 600 : 500,
+                letterSpacing: "0.5px",
+              }}
+            >
+              {menuItem.label}
+            </Typography>
+          </ListItemContent>
+          {hasChildren && (
+            <KeyboardArrowDownIcon
+              sx={{
+                transform: isOpened ? "rotate(180deg)" : "none",
+                transition: "transform 0.2s",
+                color: isSelectedChild
+                  ? "var(--joy-palette-primary-500)"
+                  : "var(--joy-palette-neutral-500)",
+                marginLeft: "auto",
+              }}
+            />
+          )}
+        </Link>
       </ListItemButton>
     );
   };
 
   return (
-    <ListItem key={label} nested={nested}>
-      {nested ? (
-        <Toggler
-          renderToggle={({open, setOpen}) => {
-            const toggle = () => {
-              setOpen(!open);
-              setOpened(!open);
-            };
-            return (
-              <ListItemButton
-                onClick={toggle}
-                selected={pathname.includes(route) && !opened}
-              >
-                {icon}
-                <ListItemContent>
-                  <Typography level="title-sm">{label}</Typography>
-                </ListItemContent>
-                <KeyboardArrowDownIcon
-                  sx={{transform: open ? "rotate(180deg)" : "none"}}
-                />
-              </ListItemButton>
-            );
-          }}
-        >
-          <List>{child.map((menuChild) => renderMenu(menuChild))}</List>
-        </Toggler>
-      ) : (
-        renderMenu(menu)
-      )}
+    <ListItem
+      key={label}
+      nested={nested}
+      sx={{
+        width: "100%",
+      }}
+    >
+      {renderMenu(menu)}
+      <AnimatePresence>
+        {nested && isOpened && (
+          <motion.div
+            initial={{height: 0, opacity: 0}}
+            animate={{height: "auto", opacity: 1}}
+            exit={{height: 0, opacity: 0}}
+            transition={{duration: 0.2}}
+            style={{overflow: "hidden", width: "100%"}}
+          >
+            <List
+              sx={{
+                "--List-nestedInsetStart": "24px",
+                pl: 1,
+              }}
+            >
+              {child.map((menuChild) => (
+                <ListItem key={menuChild.route} sx={{width: "100%"}}>
+                  {renderMenu(menuChild, true)}
+                </ListItem>
+              ))}
+            </List>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ListItem>
   );
 };
+
 interface Props {
   session: SessionType;
+  handleSignOut: () => void;
+  open?: boolean;
+  onClose?: () => void;
 }
-const emptyUser = {email: "", name: ""};
 
-const Sidebar: React.FC<Props> = ({session}) => {
+const Sidebar: React.FC<Props> = ({
+  session,
+  handleSignOut,
+  open = true,
+  onClose,
+}) => {
   const pathname: string = usePathname();
-  const {categories} = useMasterData();
-
-  const user: UserType = session?.user || emptyUser;
+  const user: UserType = session?.user || {email: "", name: ""};
 
   const menus: MenusType = [
-    {label: "Home", route: "/", icon: <HomeRoundedIcon />, disabled: false},
+    {label: "Home", route: "/", icon: <HomeRoundedIcon />},
     {
       label: "Produk",
       route: "/products",
       icon: <DashboardRoundedIcon />,
-      disabled: categories.length < 1,
-      child: categories.map(({route, name}) => ({
-        label: name,
-        route: `/products/${route}`,
-        disabled: false,
+      child: [
+        {label: "Kategori", route: "/category"},
+        {label: "Koleksi", route: "/collection"},
+      ].map(({route, label}) => ({
+        label,
+        route: `/products${route}`,
       })),
     },
   ];
 
-  const handleSignOut = async () => {
-    const {isConfirmed} = await Swal.fire({
-      title: "Apakah anda yakin ingin keluar?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#171a1c",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Keluar",
-      cancelButtonText: "Batal",
-    });
-    if (isConfirmed) {
-      signOut({
-        callbackUrl: "/sign-in",
-      });
-    }
-  };
-
   return (
-    <Sheet
-      className="Sidebar"
-      sx={{
-        position: {xs: "fixed", md: "sticky"},
-        transform: {
-          xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))",
-          md: "none",
-        },
-        transition: "transform 0.4s, width 0.4s",
-        zIndex: 10000,
-        height: "100dvh",
-        width: "var(--Sidebar-width)",
-        top: 0,
-        p: 2,
-        flexShrink: 0,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        borderRight: "1px solid",
-        borderColor: "divider",
-        "--Sidebar-width": {xs: "220px", lg: "240px"},
-      }}
-    >
-      <Box
-        className="Sidebar-overlay"
+    <>
+      {/* Overlay for mobile */}
+      {open && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1199,
+            display: {xs: "block", md: "none"},
+          }}
+          onClick={onClose}
+        />
+      )}
+
+      <Sheet
+        className="Sidebar"
         sx={{
           position: "fixed",
-          zIndex: 9998,
+          zIndex: 1200,
+          height: "100vh",
+          width: "260px",
           top: 0,
           left: 0,
-          width: "100vw",
-          height: "100vh",
-          opacity: "var(--SideNavigation-slideIn)",
-          backgroundColor: "var(--joy-palette-background-backdrop)",
-          transition: "opacity 0.4s",
-          transform: {
-            xs: "translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))",
-            lg: "translateX(-100%)",
-          },
-        }}
-        onClick={() => closeSidebar()}
-      />
-      <Typography level="title-lg">TokoTrend</Typography>
-      <Box
-        sx={{
-          minHeight: 0,
-          overflow: "hidden auto",
-          flexGrow: 1,
+          p: 2,
           display: "flex",
           flexDirection: "column",
-          [`& .${listItemButtonClasses.root}`]: {
-            gap: 1.5,
+          gap: 2,
+          borderRight: "1px solid",
+          borderColor: "divider",
+          backgroundColor: "background.surface",
+          boxShadow: "sm",
+          transform: {
+            xs: open ? "translateX(0)" : "translateX(-100%)",
+            md: "translateX(0)",
           },
+          transition: "transform 0.3s ease",
         }}
       >
-        <List
-          size="sm"
+        <Typography
+          level="h4"
           sx={{
-            gap: 1,
-            "--List-nestedInsetStart": "30px",
-            "--ListItem-radius": (theme) => theme.vars.radius.sm,
+            mb: 2,
+            fontWeight: "bold",
+            textAlign: "center",
+            py: 1,
+            px: 2,
+            borderRadius: "sm",
           }}
         >
-          {menus.map((menu) => (
-            <Menu key={menu.label} pathname={pathname} menu={menu} />
-          ))}
-        </List>
-      </Box>
-      <Divider />
-      <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
-        <Avatar variant="outlined" size="sm">
-          {getInitialsName(user.name)}
-        </Avatar>
-        <Box sx={{minWidth: 0, flex: 1}}>
-          <Typography level="title-sm">{user.name}</Typography>
-          <Typography level="body-xs">{user.email}</Typography>
-        </Box>
-        <IconButton
-          size="sm"
-          variant="plain"
-          color="neutral"
-          onClick={handleSignOut}
+          TokoTrend
+        </Typography>
+
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
         >
-          <LogoutRoundedIcon />
-        </IconButton>
-      </Box>
-    </Sheet>
+          <List
+            size="sm"
+            sx={{
+              flex: 1,
+              minHeight: 0,
+              overflow: "auto",
+              "--ListItem-radius": "8px",
+              "--List-gap": "6px",
+            }}
+          >
+            {menus.map((menu) => (
+              <Menu key={menu.label} pathname={pathname} menu={menu} />
+            ))}
+          </List>
+        </Box>
+
+        <Divider sx={{my: 1}} />
+
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            alignItems: "center",
+            p: 1.5,
+            borderRadius: "md",
+          }}
+        >
+          <Avatar variant="solid" size="sm">
+            {getInitialsName(user.name)}
+          </Avatar>
+          <Box sx={{minWidth: 0, flex: 1}}>
+            <Typography level="title-sm" fontWeight={600}>
+              {user.name}
+            </Typography>
+            <Typography level="body-xs" color="neutral">
+              {user.email}
+            </Typography>
+          </Box>
+          <IconButton
+            size="sm"
+            variant="soft"
+            color="danger"
+            onClick={handleSignOut}
+          >
+            <LogoutRoundedIcon />
+          </IconButton>
+        </Box>
+      </Sheet>
+    </>
   );
 };
 

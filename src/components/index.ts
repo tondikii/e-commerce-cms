@@ -18,5 +18,4 @@ export {default as InputNumber} from "./InputNumber";
 export {default as RadioGroupStyles} from "./RadioGroupStyles";
 export {default as SelectColors} from "./SelectColors";
 export {default as Table} from "./Table";
-export {default as PageHeader} from "./PageHeader";
 export {default as ProductForm} from "./ProductForm";

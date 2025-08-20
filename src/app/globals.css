@@ -52,3 +52,28 @@ body {
 .text-danger {
   color: #c41c1c;
 }
+
+/* Reset default margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure proper scrolling */
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Main content area */
+.MainContent {
+  min-height: 100vh;
+}
+
+/* Table responsiveness */
+.OrderTableContainer {
+  width: 100% !important;
+  max-width: 100% !important;
+}

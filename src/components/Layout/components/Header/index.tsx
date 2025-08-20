@@ -1,38 +1,64 @@
-import * as React from "react";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import Sheet from "@mui/joy/Sheet";
-import IconButton from "@mui/joy/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import {toggleSidebar} from "@/components/utils";
+"use client";
 
-export default function Header() {
+import React, {FC} from "react";
+import {Box, Typography, IconButton} from "@mui/joy";
+import {Menu as MenuIcon} from "@mui/icons-material";
+import {SessionType} from "@/types";
+import ProfileMenu from "./components/ProfileMenu";
+
+interface HeaderProps {
+  onMenuClick?: () => void;
+  title?: string;
+  showMenuButton?: boolean;
+  session: SessionType;
+  handleSignOut: () => void;
+}
+
+const Header: FC<HeaderProps> = ({
+  onMenuClick,
+  title = "Dashboard",
+  showMenuButton = false,
+  session,
+  handleSignOut,
+}) => {
   return (
-    <Sheet
+    <Box
+      component="header"
       sx={{
-        display: {xs: "flex", md: "none"},
+        display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        position: "fixed",
-        top: 0,
-        width: "100vw",
-        height: "var(--Header-height)",
-        zIndex: 9995,
         p: 2,
-        gap: 1,
+        backgroundColor: "background.surface",
         borderBottom: "1px solid",
-        borderColor: "background.level1",
-        boxShadow: "sm",
-        "--Header-height": {xs: "52px", md: "0px"},
+        borderColor: "divider",
+        position: "sticky",
+        top: 0,
+        zIndex: 1100,
+        backdropFilter: "blur(8px)",
       }}
     >
-      <IconButton
-        onClick={() => toggleSidebar()}
-        variant="outlined"
-        color="neutral"
-        size="sm"
-      >
-        <MenuIcon />
-      </IconButton>
-    </Sheet>
+      {/* Left Section */}
+      <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+        {showMenuButton && (
+          <IconButton
+            variant="outlined"
+            onClick={onMenuClick}
+            sx={{display: {lg: "none"}}}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        <Typography level="h4" component="h1" fontWeight="bold">
+          {title}
+        </Typography>
+      </Box>
+
+      {/* Right Section */}
+      <ProfileMenu session={session} handleSignOut={handleSignOut} />
+    </Box>
   );
-}
+};
+
+export default Header;

@@ -1,10 +1,8 @@
 import {NextResponse} from "next/server";
 import prisma from "@/lib/prisma";
 import {
-  DEFAULT_CATEGORY_ID,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
-  DEFAULT_STYLE_ID,
   RESPONSE_STATUS_BAD_REQUEST,
   RESPONSE_STATUS_CREATED,
   RESPONSE_STATUS_INTERNAL_SERVER_ERROR,
@@ -17,20 +15,20 @@ export async function POST(request: Request) {
   try {
     const body: {
       product: Prisma.ProductCreateInput;
-      productImages: Prisma.ProductImageCreateManyInput[];
-      productUnits: Prisma.ProductUnitCreateManyInput[];
+      images: Prisma.ProductImageCreateManyInput[];
+      variants: Prisma.ProductVariantCreateManyInput[];
     } = await request.json();
     const product = await prisma.product.create({data: body.product});
-    const productImages = body.productImages.map((e) => ({
+    const images = body.images.map((e) => ({
       ...e,
       productId: product.id,
     }));
-    const productUnits = body.productUnits.map((e) => ({
+    const variants = body.variants.map((e) => ({
       ...e,
       productId: product.id,
     }));
-    await api.post("product-image", productImages);
-    await api.post("product-unit", productUnits);
+    await api.post("product-image", images);
+    await api.post("product-variant", variants);
     return NextResponse.json(product, {status: RESPONSE_STATUS_CREATED});
   } catch (err) {
     return NextResponse.json(err, {
@@ -47,24 +45,29 @@ export async function GET(request: Request) {
       name = "",
       limit = DEFAULT_LIMIT,
       offset = DEFAULT_OFFSET,
-      styleId = DEFAULT_STYLE_ID,
-      categoryId = DEFAULT_CATEGORY_ID,
+      categoryId,
+      collectionId,
     } = paramsObject;
     const pagination = {take: Number(limit), skip: Number(offset)};
 
     const where: Prisma.ProductWhereInput = {
       name: {contains: name, mode: "insensitive"},
-      styleId: Number(styleId),
-      categoryId: Number(categoryId),
     };
+
+    if (categoryId) {
+      where.categoryId = Number(categoryId);
+    }
+    if (collectionId) {
+      where.collectionId = Number(collectionId);
+    }
 
     const [data, totalRecords] = await prisma.$transaction([
       prisma.product.findMany({
         where,
         include: {
-          productImages: {select: {url: true}},
-          productUnits: {
-            select: {quantity: true, size: {select: {code: true}}},
+          images: {select: {url: true}},
+          variants: {
+            // select: {stock: true, size: {select: {code: true}}},
           },
         },
         ...pagination,

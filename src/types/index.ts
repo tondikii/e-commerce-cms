@@ -7,8 +7,11 @@ export interface CustomTargetType {
 }
 
 export interface UserType {
+  id?: number;
   name: string;
   email: string;
+  phoneNumber?: string;
+  createdAt?: string;
 }
 
 export type SessionType = {
@@ -20,7 +23,7 @@ export interface MenuType {
   route: string;
   icon?: ReactNode;
   child?: MenuType[];
-  disabled: boolean;
+  isChildren?: boolean;
 }
 export type MenusType = MenuType[];
 
@@ -56,7 +59,6 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  discount?: number;
   createdAt: string;
   updatedAt: string;
   categoryId: number;

@@ -2,11 +2,11 @@ import {Categories} from "@/types";
 import {createContext} from "react";
 
 interface MasterDataContextType {
-  categories: Categories;
+  // categories: Categories;
 }
 
 const MasterDataContext = createContext<MasterDataContextType>({
-  categories: [],
+  // categories: [],
 });
 
 export default MasterDataContext;

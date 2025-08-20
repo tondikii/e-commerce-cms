@@ -12,18 +12,18 @@ interface Props {
 const MasterDataContextProvider: FC<Props> = ({children}) => {
   const [categories, setCategories] = useState<Categories>([]);
 
-  const fetchedCategories: FetchedCategories = useFetch(ENDPOINT_CATEGORY);
+  // const fetchedCategories: FetchedCategories = useFetch(ENDPOINT_CATEGORY);
 
-  useEffect(() => {
-    if (fetchedCategories.data) {
-      const data = fetchedCategories.data || [];
-      const mappedCategoriesWithRoute = data.map((category) => ({
-        ...category,
-        route: `${category?.id}`,
-      }));
-      setCategories(mappedCategoriesWithRoute);
-    }
-  }, [fetchedCategories.data]);
+  // useEffect(() => {
+  //   if (fetchedCategories.data) {
+  //     const data = fetchedCategories.data || [];
+  //     const mappedCategoriesWithRoute = data.map((category) => ({
+  //       ...category,
+  //       route: `${category?.id}`,
+  //     }));
+  //     setCategories(mappedCategoriesWithRoute);
+  //   }
+  // }, [fetchedCategories.data]);
 
   return (
     <MasterDataContext.Provider value={{categories}}>

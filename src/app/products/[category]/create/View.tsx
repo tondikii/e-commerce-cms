@@ -3,7 +3,7 @@ import {useParams} from "next/navigation";
 import {type FC} from "react";
 import {ColourOption} from "@/types";
 import useMasterData from "@/store/useMasterData";
-import {PageHeader, ProductForm} from "@/components";
+import {ProductForm} from "@/components";
 
 interface Props {
   sizes: {label: string; value: number}[];
@@ -16,11 +16,6 @@ const CreateProductView: FC<Props> = ({sizes, colors}) => {
       id: 0,
       name: "",
     };
-  return (
-    <>
-      <PageHeader title={`Buat Produk ${categoryLabel}`} />
-      <ProductForm sizes={sizes} colors={colors} categoryId={categoryId} />
-    </>
-  );
+  return <ProductForm sizes={sizes} colors={colors} categoryId={categoryId} />;
 };
 export default CreateProductView;
