@@ -1,3 +1,5 @@
+import {BreadCrumbData} from "@/types";
+
 export const ENDPOINT_PRODUCT = "product";
 export const ENDPOINT_CATEGORY = "category";
 
@@ -14,3 +16,11 @@ export const RESPONSE_STATUS_OK = 200;
 export const RESPONSE_STATUS_CREATED = 201;
 export const RESPONSE_STATUS_INTERNAL_SERVER_ERROR = 500;
 export const RESPONSE_STATUS_BAD_REQUEST = 400;
+
+export const BREAD_CRUMB_PATHNAMES: BreadCrumbData[] = [
+  {name: "products", label: "Produk"},
+  {name: "category", label: "collection"},
+  {name: "category", label: "Koleksi"},
+  {name: "create", label: "Buat"},
+  {name: "detail", label: "Detail"},
+];

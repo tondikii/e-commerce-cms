@@ -14,6 +14,7 @@ import {
 import {LogoutRounded, AccountCircle, Close} from "@mui/icons-material";
 import {SessionType, UserType} from "@/types";
 import ProfileModal from "./components/ProfileModal";
+import {getInitialsName} from "@/components/utils";
 
 interface ProfileMenuProps {
   session: SessionType;
@@ -56,14 +57,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({session, handleSignOut}) => {
     handleCloseMenu();
   };
 
-  const getInitialsName = (name: string = "User"): string =>
-    name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-
   return (
     <>
       {/* Avatar Button */}
@@ -75,10 +68,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({session, handleSignOut}) => {
           borderRadius: "md",
           "&:hover": {backgroundColor: "background.level1"},
         }}
+        size="lg"
       >
-        <Avatar sx={{width: 32, height: 32, backgroundColor: "primary.500"}}>
-          {getInitialsName(user?.name)}
-        </Avatar>
+        <AccountCircle />
       </IconButton>
 
       {/* Menu */}

@@ -53,12 +53,7 @@ const Layout: FC<Props> = ({children}) => {
 
   return (
     <Box sx={{display: "flex", minHeight: "100dvh"}}>
-      <Sidebar
-        session={session}
-        handleSignOut={handleSignOut}
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <Box
         component="main"

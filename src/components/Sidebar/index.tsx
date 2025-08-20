@@ -1,9 +1,6 @@
 "use client";
 import * as React from "react";
-import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
-import Divider from "@mui/joy/Divider";
-import IconButton from "@mui/joy/IconButton";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
@@ -12,9 +9,7 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {getInitialsName} from "../utils";
 import {MenusType, MenuType, SessionType, UserType} from "@/types";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
@@ -151,20 +146,12 @@ const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
 };
 
 interface Props {
-  session: SessionType;
-  handleSignOut: () => void;
   open?: boolean;
   onClose?: () => void;
 }
 
-const Sidebar: React.FC<Props> = ({
-  session,
-  handleSignOut,
-  open = true,
-  onClose,
-}) => {
+const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
   const pathname: string = usePathname();
-  const user: UserType = session?.user || {email: "", name: ""};
 
   const menus: MenusType = [
     {label: "Home", route: "/", icon: <HomeRoundedIcon />},
@@ -262,38 +249,6 @@ const Sidebar: React.FC<Props> = ({
               <Menu key={menu.label} pathname={pathname} menu={menu} />
             ))}
           </List>
-        </Box>
-
-        <Divider sx={{my: 1}} />
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            alignItems: "center",
-            p: 1.5,
-            borderRadius: "md",
-          }}
-        >
-          <Avatar variant="solid" size="sm">
-            {getInitialsName(user.name)}
-          </Avatar>
-          <Box sx={{minWidth: 0, flex: 1}}>
-            <Typography level="title-sm" fontWeight={600}>
-              {user.name}
-            </Typography>
-            <Typography level="body-xs" color="neutral">
-              {user.email}
-            </Typography>
-          </Box>
-          <IconButton
-            size="sm"
-            variant="soft"
-            color="danger"
-            onClick={handleSignOut}
-          >
-            <LogoutRoundedIcon />
-          </IconButton>
         </Box>
       </Sheet>
     </>

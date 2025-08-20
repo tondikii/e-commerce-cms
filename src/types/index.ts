@@ -104,3 +104,8 @@ export interface FetchedCategories {
   loading: boolean;
   error: any;
 }
+
+export interface BreadCrumbData {
+  name: string;
+  label: string;
+}

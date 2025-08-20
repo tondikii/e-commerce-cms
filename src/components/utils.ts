@@ -25,10 +25,10 @@ export function toggleSidebar() {
   }
 }
 
-export function getInitialsName(name: string) {
-  const matches: string[] = name.match(/(\b\S)?/g) || [];
-  if (matches?.[0]) {
-    return matches.join("");
-  }
-  return "";
-}
+export const getInitialsName = (name: string = ""): string =>
+  name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
