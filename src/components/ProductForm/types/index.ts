@@ -1,6 +1,5 @@
-// types/product-form.types.ts
-
-import {ColourOption, Product} from "@/types";
+import {ColourOption} from "@/types";
+import {Product} from "@/types/product";
 
 export interface ProductFormProps {
   sizes: {label: string; value: number}[];
@@ -35,9 +34,8 @@ export interface ImageInput {
 
 export interface FormProduct {
   id?: number;
-  styleId: number;
   name: string;
-  description: string;
+  description?: string;
   price: string | number;
 }
 

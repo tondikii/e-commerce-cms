@@ -1,9 +1,8 @@
 "use client";
 import React, {FC, useEffect, useState} from "react";
 import MasterDataContext from "./MasterDataContext";
-import {Categories, FetchedCategories} from "@/types";
 import {useFetch} from "@/hooks";
-import {ENDPOINT_CATEGORY} from "@/constants";
+import {Categories} from "@/types/category";
 
 interface Props {
   children: React.ReactNode;

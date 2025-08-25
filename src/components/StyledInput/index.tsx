@@ -1,22 +1,13 @@
-import {Input} from "@mui/joy";
+import {Input, InputProps} from "@mui/joy";
 import {FC} from "react";
 import FormControl from "../FormControl";
-import {SxProps} from "@mui/joy/styles/types";
 
-interface Props {
-  type?: string;
-  name?: string;
+interface Props extends Omit<InputProps, "onChange"> {
   label?: string;
-  size?: "lg" | "sm" | "md";
-  placeholder?: string;
-  sx?: SxProps;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  startDecorator?: React.ReactNode;
   errorMessage?: string;
-  endDecorator?: React.ReactNode;
-  required?: boolean;
   maxLength?: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 }
 
 const customSx = {
@@ -31,27 +22,22 @@ const customSx = {
 };
 
 const StyledInput: FC<Props> = ({
-  type,
-  name,
   label,
-  size = "lg",
+  errorMessage,
+  maxLength = 255, // Default maxLength
+  onChange,
+  size = "md",
   placeholder = "Masukkan di sini...",
   sx = customSx,
-  value,
-  onChange,
-  startDecorator,
-  errorMessage,
-  endDecorator,
   required,
-  maxLength = 255, // Default maxLength
+  ...inputProps // Spread semua props lainnya dari InputProps
 }) => {
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (maxLength && e.target.value.length > maxLength) {
       e.target.value = e.target.value.slice(0, maxLength);
     }
     onChange(e);
-  }
+  };
 
   return (
     <FormControl
@@ -61,15 +47,11 @@ const StyledInput: FC<Props> = ({
       required={required}
     >
       <Input
-        type={type}
-        name={name}
+        {...inputProps} // Spread semua props InputProps
+        size={size}
         placeholder={placeholder}
         sx={sx}
-        size={size}
-        value={value}
         onChange={handleChange}
-        startDecorator={startDecorator}
-        endDecorator={endDecorator}
       />
     </FormControl>
   );

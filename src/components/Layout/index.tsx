@@ -78,7 +78,7 @@ const Layout: FC<Props> = ({children}) => {
           sx={{
             flex: 1,
             overflow: "auto",
-            p: 2,
+            p: 4,
           }}
         >
           {children}

@@ -1,149 +1,19 @@
 "use client";
-import * as React from "react";
+import {useEffect, useState} from "react";
 import Box from "@mui/joy/Box";
 import List from "@mui/joy/List";
-import ListItem from "@mui/joy/ListItem";
-import ListItemButton from "@mui/joy/ListItemButton";
-import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {MenusType, MenuType, SessionType, UserType} from "@/types";
-import Link from "next/link";
+import {MenusType} from "@/types";
 import {usePathname} from "next/navigation";
-import {motion, AnimatePresence} from "framer-motion";
-
-interface MenuProps {
-  pathname: string;
-  menu: MenuType;
-}
-
-const Menu: React.FC<MenuProps> = ({pathname, menu}) => {
-  const {label, child = [], route} = menu;
-  const nested = Boolean(Array.isArray(child) && child.length > 0);
-  const isOpened = pathname.includes(route) && nested;
-
-  const renderMenu = (menuItem: MenuType, isChild = false) => {
-    const isSelectedChild = pathname === menuItem.route;
-    const hasChildren =
-      Array.isArray(menuItem.child) && menuItem.child.length > 0;
-
-    const renderIcon = () => {
-      if (React.isValidElement<{sx?: object}>(menuItem?.icon)) {
-        return React.cloneElement(menuItem?.icon, {
-          sx: {
-            color: isSelectedChild
-              ? "var(--joy-palette-primary-500)"
-              : "var(--joy-palette-neutral-500)",
-            transition: "color 0.2s",
-          },
-        });
-      }
-      return null;
-    };
-
-    return (
-      <ListItemButton
-        key={menuItem.route}
-        selected={isSelectedChild}
-        component={motion.div}
-        whileHover={{scale: 1.02}}
-        sx={{
-          mt: isChild ? 0.5 : 0,
-          borderRadius: "md",
-          px: 2,
-          backgroundColor: isSelectedChild
-            ? "var(--joy-palette-primary-50)"
-            : "transparent",
-          "&:hover": {
-            backgroundColor: isSelectedChild
-              ? "var(--joy-palette-primary-100)"
-              : "var(--joy-palette-neutral-100)",
-          },
-          transition: "all 0.2s ease",
-        }}
-      >
-        <Link
-          href={menuItem.route}
-          passHref
-          style={{
-            textDecoration: "none",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            gap: "12px",
-          }}
-        >
-          {renderIcon()}
-          <ListItemContent>
-            <Typography
-              level="title-sm"
-              sx={{
-                color: isSelectedChild
-                  ? "var(--joy-palette-primary-700)"
-                  : "var(--joy-palette-neutral-800)",
-                fontWeight: isSelectedChild ? 600 : 500,
-                letterSpacing: "0.5px",
-              }}
-            >
-              {menuItem.label}
-            </Typography>
-          </ListItemContent>
-          {hasChildren && (
-            <KeyboardArrowDownIcon
-              sx={{
-                transform: isOpened ? "rotate(180deg)" : "none",
-                transition: "transform 0.2s",
-                color: isSelectedChild
-                  ? "var(--joy-palette-primary-500)"
-                  : "var(--joy-palette-neutral-500)",
-                marginLeft: "auto",
-              }}
-            />
-          )}
-        </Link>
-      </ListItemButton>
-    );
-  };
-
-  return (
-    <ListItem
-      key={label}
-      nested={nested}
-      sx={{
-        width: "100%",
-      }}
-    >
-      {renderMenu(menu)}
-      <AnimatePresence>
-        {nested && isOpened && (
-          <motion.div
-            initial={{height: 0, opacity: 0}}
-            animate={{height: "auto", opacity: 1}}
-            exit={{height: 0, opacity: 0}}
-            transition={{duration: 0.2}}
-            style={{overflow: "hidden", width: "100%"}}
-          >
-            <List
-              sx={{
-                "--List-nestedInsetStart": "24px",
-                pl: 1,
-              }}
-            >
-              {child.map((menuChild) => (
-                <ListItem key={menuChild.route} sx={{width: "100%"}}>
-                  {renderMenu(menuChild, true)}
-                </ListItem>
-              ))}
-            </List>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </ListItem>
-  );
-};
+import Menu from "./components/Menu";
+import StoreName from "../StoreLogo";
+import Link from "next/link";
+import {Stack} from "@mui/joy";
+import Image from "next/image";
+import {StoreLogo} from "..";
 
 interface Props {
   open?: boolean;
@@ -152,6 +22,7 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
   const pathname: string = usePathname();
+  const [selectedMenuRoute, setSelectedMenuRoute] = useState<string>("");
 
   const menus: MenusType = [
     {label: "Home", route: "/", icon: <HomeRoundedIcon />},
@@ -160,14 +31,55 @@ const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
       route: "/products",
       icon: <DashboardRoundedIcon />,
       child: [
-        {label: "Kategori", route: "/category"},
-        {label: "Koleksi", route: "/collection"},
+        {label: "Kategori", route: "/categories"},
+        {label: "Koleksi", route: "/collections"},
       ].map(({route, label}) => ({
         label,
         route: `/products${route}`,
       })),
     },
   ];
+
+  useEffect(() => {
+    const excludedRoute = "/";
+    if (pathname === excludedRoute && selectedMenuRoute !== excludedRoute) {
+      setSelectedMenuRoute(excludedRoute);
+    } else if (pathname === excludedRoute) {
+      return;
+    }
+
+    for (let i = 0; i < menus.length; i++) {
+      let newSelectedMenuRoute = "";
+
+      const {child = [], route} = menus[i];
+      if (child?.length > 0) {
+        for (let j = 0; j < child?.length; j++) {
+          const menuChildRoute = child?.[j].route || "";
+          const isMenuChildSelected =
+            menuChildRoute !== excludedRoute &&
+            pathname.startsWith(menuChildRoute);
+          if (isMenuChildSelected) {
+            newSelectedMenuRoute = menuChildRoute;
+            break;
+          }
+        }
+      }
+
+      const isMenuSelected =
+        !newSelectedMenuRoute &&
+        route !== excludedRoute &&
+        pathname.startsWith(route);
+      if (isMenuSelected) {
+        newSelectedMenuRoute = route;
+      }
+
+      if (newSelectedMenuRoute) {
+        setSelectedMenuRoute(newSelectedMenuRoute);
+        break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <>
@@ -212,19 +124,9 @@ const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
           transition: "transform 0.3s ease",
         }}
       >
-        <Typography
-          level="h4"
-          sx={{
-            mb: 2,
-            fontWeight: "bold",
-            textAlign: "center",
-            py: 1,
-            px: 2,
-            borderRadius: "sm",
-          }}
-        >
-          TokoTrend
-        </Typography>
+        <Link href="/" style={{alignSelf: "center"}}>
+          <StoreLogo />
+        </Link>
 
         <Box
           sx={{
@@ -246,7 +148,12 @@ const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
             }}
           >
             {menus.map((menu) => (
-              <Menu key={menu.label} pathname={pathname} menu={menu} />
+              <Menu
+                key={menu.label}
+                pathname={pathname}
+                menu={menu}
+                selectedMenuRoute={selectedMenuRoute}
+              />
             ))}
           </List>
         </Box>

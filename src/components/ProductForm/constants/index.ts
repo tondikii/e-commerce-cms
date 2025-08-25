@@ -1,5 +1,3 @@
-// constants/product-form.constants.ts
-
 import {UnitInput, FormProduct} from "../types";
 
 export const INITIAL_UNIT: UnitInput = {

@@ -1,13 +1,5 @@
-import {Button} from "@mui/joy";
-import type {FC} from "react";
-
-interface indexProps {
-  children: string | React.ReactNode;
-  size?: "lg" | "sm" | "md";
-  startDecorator?: React.ReactNode;
-  onClick?: () => void;
-  variant?: "solid" | "soft" | "outlined" | "plain";
-}
+import {Button, ButtonProps} from "@mui/joy";
+import type {FC} from "react"
 
 const customSx = {
   "&:hover": {
@@ -18,23 +10,16 @@ const customSx = {
   color: "#ffffff",
 };
 
-const index: FC<indexProps> = ({
+const StyledButton: FC<ButtonProps> = ({
   size = "md",
-  startDecorator,
-  children,
-  onClick = () => {},
   variant = "solid",
+  ...props
 }) => {
   return (
     <Button
-      sx={customSx}
-      startDecorator={startDecorator}
-      size={size}
-      onClick={onClick}
-      variant={variant}
-    >
-      {children}
-    </Button>
+      sx={{...props.sx, ...customSx}}
+      {...props}
+    />
   );
 };
-export default index;
+export default StyledButton;

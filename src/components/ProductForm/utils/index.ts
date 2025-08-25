@@ -1,9 +1,7 @@
-// utils/product-form.utils.ts
-
 import {upload} from "@imagekit/next";
 import {api} from "@/lib/axios";
 import {AuthParams} from "../types";
-import { API_ENDPOINTS} from "../constants";
+import {API_ENDPOINTS} from "../constants";
 
 /**
  * Generate product code based on size and color IDs

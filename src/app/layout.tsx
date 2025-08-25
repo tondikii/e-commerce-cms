@@ -1,11 +1,15 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import {Inter, Staatliches} from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
 import {Layout, Provider} from "@/components";
 import MasterDataContextProvider from "@/store/MasterDataProvider";
 
 const inter = Inter({subsets: ["latin"]});
+// const staatliches = Staatliches({
+//   subsets: ["latin"],
+//   weight: "400", // Staatliches hanya punya 400
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",

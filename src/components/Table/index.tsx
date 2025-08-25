@@ -1,14 +1,14 @@
+// src/components/Table/index.tsx
 "use client";
 
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {
   Box,
-  Chip,
   FormControl,
   FormLabel,
   Select,
   Option,
-  Table,
+  Table as JoyTable,
   Sheet,
   IconButton,
   Typography,
@@ -22,17 +22,17 @@ import {
 } from "@mui/icons-material";
 import Image from "next/image";
 import {format} from "date-fns";
-import {FetchedProducts, FetchProductsParams, Products} from "@/types";
+import {Product, Category, FetchedData, FetchedDataParams} from "@/types";
 import {DEFAULT_LIMIT, DEFAULT_PAGE} from "@/constants";
 import {ScaleLoader} from "react-spinners";
-import {RowMenu} from "./components";
-import {useRouter} from "next/navigation";
+import RowMenu from "./components/RowMenu";
+import {usePathname, useRouter} from "next/navigation";
 import {useDebounce, useFetch, useSearchParams} from "@/hooks";
 import StyledInput from "../StyledInput";
-import {StyledButton} from "..";
+import {ModalCreate, StyledButton} from "..";
 
 interface FilterType {
-  name: string;
+  search: string;
 }
 
 interface TableComponentProps {
@@ -44,46 +44,43 @@ interface TableComponentProps {
 
 const TableComponent: React.FC<TableComponentProps> = ({
   entityName,
-  prevent,
   extraParams = {},
   title,
 }) => {
+  const pathname = usePathname();
   const router = useRouter();
   const {searchParams, setSearchParams, urlSearchParams} =
     useSearchParams(router);
 
-  const searchParamsObject: FetchProductsParams = Object.fromEntries(
+  const [modalOpen, setModalOpen] = useState(false); // State untuk modal
+
+  const searchParamsObject: FetchedDataParams = Object.fromEntries(
     searchParams.entries()
   );
 
-  const fetchProductsParams = {...searchParamsObject, ...extraParams};
-  if (fetchProductsParams?.page) {
-    fetchProductsParams.offset =
-      (fetchProductsParams.page - 1) * (fetchProductsParams?.limit || 5);
-    delete fetchProductsParams.page;
-  }
+  const fetchParams = {...searchParamsObject, ...extraParams};
 
   const [filters, setFilters] = useState<FilterType>({
-    name: searchParamsObject.name || "",
+    search: searchParamsObject.search || "",
   });
   const [refetch, setRefetch] = useState<boolean>(false);
 
-  const debouncedSearchTerm = useDebounce<string>(filters.name, 1000);
+  const debouncedSearchTerm = useDebounce<string>(filters.search, 1000);
 
   const refetchData = () => {
     setRefetch(true);
   };
 
-  const fetchedProducts: FetchedProducts = useFetch(entityName, {
-    params: fetchProductsParams,
+  const fetchedData: FetchedData = useFetch(pathname, {
+    params: fetchParams,
     refetch,
     setRefetch,
-    prevent,
+    prevent: true,
   });
 
-  const data = fetchedProducts.data;
-  const loading = fetchedProducts.loading;
-  const usedData: Products = Array.isArray(data?.data) ? data?.data : [];
+  const data = fetchedData.data;
+  const loading = fetchedData.loading;
+  const usedData: any[] = Array.isArray(data?.data) ? data?.data : [];
   const totalRecords = data?.totalRecords || 0;
 
   const page = Number(searchParamsObject.page) || DEFAULT_PAGE;
@@ -92,18 +89,30 @@ const TableComponent: React.FC<TableComponentProps> = ({
   const isFirstPage = page === 1;
   const isLastPage = page >= Math.ceil(totalRecords / limit);
 
-  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFilter = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
-    setFilters({...filters, name: value});
+    setFilters({...filters, search: value});
   };
 
   const handleSearchName = () => {
-    setSearchParams({name: "name", value: filters.name, resetPagination: true});
+    if (filters.search.trim() === "") {
+      setSearchParams({
+        name: "search",
+        value: "",
+        resetPagination: true,
+      });
+    } else {
+      setSearchParams({
+        name: "search",
+        value: filters.search,
+        resetPagination: true,
+      });
+    }
   };
 
   const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleSearchName;
+    handleSearchName();
   };
 
   const handleChangeRowsPerPage = async (
@@ -117,7 +126,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   };
 
   const getLabelDisplayedRows = (from: number, totalRecords: number) => {
-    const to = usedData.length * page;
+    const to = Math.min(page * limit, totalRecords);
     return `${from}–${to} of ${totalRecords}`;
   };
 
@@ -125,94 +134,133 @@ const TableComponent: React.FC<TableComponentProps> = ({
     setSearchParams({name: "page", value: newPage.toString()});
   };
 
-  const handleCreateProduct = () => {
-    router.push("/create");
+  const handleCreate = () => {
+    if (entityName === "products") {
+      router.push(`${pathname}/create`); // Redirect untuk produk
+    } else {
+      setModalOpen(true); // Buka modal create
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleModalSuccess = () => {
+    refetchData(); // Refresh data setelah berhasil create
+  };
+
+  const renderProductContent = () => {
+    return usedData.map((row: Product, idx) => {
+      const variants = row.variants || [];
+      const thumbnail = row.images?.[0]?.url;
+      const totalQuantity = variants.reduce(
+        (acc, variant) => acc + (variant.stock || 0),
+        0
+      );
+      return (
+        <tr key={idx + 1}>
+          <td>
+            {thumbnail ? (
+              <Image
+                src={thumbnail}
+                alt={row.name}
+                width={105}
+                height={105}
+                style={{objectFit: "cover"}}
+              />
+            ) : null}
+          </td>
+          <td>
+            <Typography level="body-xs">{row.name}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{variants.length} Varian</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{totalQuantity}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">
+              {format(new Date(row.updatedAt), "yyyy-MM-dd HH:mm")}
+            </Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">
+              {format(new Date(row.createdAt), "yyyy-MM-dd")}
+            </Typography>
+          </td>
+          <td>
+            <RowMenu
+              pathname={pathname}
+              data={row}
+              entityName={entityName}
+              router={router}
+              refetch={refetchData}
+            />
+          </td>
+        </tr>
+      );
+    });
   };
 
   const renderContent = () => {
     if (usedData.length > 0) {
-      return usedData.map((row, idx) => {
-        const productUnits = row?.productUnits || [];
-        const thumbnail = row?.productImages?.[0]?.url;
-        const totalQuantity = productUnits.reduce(
-          (acc, product) => acc + product.quantity,
-          0
-        );
-        return (
-          <tr key={idx + 1}>
-            <td style={{textAlign: "center", width: 120}}>
-              <Typography level="body-xs">{row.id}</Typography>
-            </td>
-            <td>
-              {thumbnail ? (
-                <Image
-                  src={thumbnail}
-                  alt={row.name}
-                  width={105}
-                  height={105}
+      if (entityName === "products") {
+        return renderProductContent();
+      } else {
+        return usedData.map((row: Category, idx) => {
+          const productCount = row.products?.length || 0;
+          return (
+            <tr key={idx + 1}>
+              <td>
+                <Typography level="body-xs">{row.name}</Typography>
+              </td>
+              <td>
+                <Typography level="body-xs">{productCount} Produk</Typography>
+              </td>
+              <td>
+                <Typography level="body-xs">
+                  {format(new Date(row.updatedAt), "yyyy-MM-dd HH:mm")}
+                </Typography>
+              </td>
+              <td>
+                <Typography level="body-xs">
+                  {format(new Date(row.createdAt), "yyyy-MM-dd")}
+                </Typography>
+              </td>
+              <td>
+                <RowMenu
+                  pathname={pathname}
+                  data={row}
+                  entityName={entityName}
+                  router={router}
+                  refetch={refetchData}
                 />
-              ) : null}
-            </td>
-            <td>
-              <Typography level="body-xs">{row.name}</Typography>
-            </td>
-            <td>
-              <Typography level="body-xs">
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    flexDirection: "row",
-                  }}
-                >
-                  {productUnits.map(({size}) => (
-                    <Chip key={size.code}>{size.code}</Chip>
-                  ))}
-                </Box>
-              </Typography>
-            </td>
-            <td>
-              <Typography level="body-xs">{totalQuantity}</Typography>
-            </td>
-            <td>
-              <Typography level="body-xs">
-                {format(new Date(row.updatedAt), "yyyy-MM-dd HH:mm")}
-              </Typography>
-            </td>
-            <td>
-              <Typography level="body-xs">
-                {format(new Date(row.createdAt), "yyyy-MM-dd")}
-              </Typography>
-            </td>
-            <td>
-              <RowMenu
-                product={row}
-                entityName={entityName}
-                router={router}
-                refetch={refetchData}
-              />
-            </td>
-          </tr>
-        );
-      });
+              </td>
+            </tr>
+          );
+        });
+      }
     }
     return (
       <tr>
-        <td colSpan={8}>
+        <td colSpan={entityName === "products" ? 7 : 5}>
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              height: 200,
             }}
           >
             {loading ? (
               <ScaleLoader
                 color="#212b36"
-                height={52.5}
-                width={6}
-                radius={3}
-                margin={3}
+                height={35}
+                width={4}
+                radius={2}
+                margin={2}
               />
             ) : (
               <Typography>Data tidak ditemukan.</Typography>
@@ -223,167 +271,193 @@ const TableComponent: React.FC<TableComponentProps> = ({
     );
   };
 
-  useEffect(() => {
-    if (urlSearchParams && data) {
-      refetchData();
+  const getTableHeaders = () => {
+    if (entityName === "products") {
+      return (
+        <thead>
+          <tr>
+            <th style={{width: 100, padding: "0.5rem"}}>Foto</th>
+            <th style={{width: 200, padding: "0.5rem"}}>Nama</th>
+            <th style={{width: 150, padding: "0.5rem"}}>Jumlah Varian</th>
+            <th style={{width: 50, padding: "0.5rem"}}>Stok</th>
+            <th style={{width: 100, padding: "0.5rem"}}>Diperbarui</th>
+            <th style={{width: 100, padding: "0.5rem"}}>Dibuat</th>
+            <th style={{width: 80, padding: "0.5rem"}}> </th>
+          </tr>
+        </thead>
+      );
+    } else {
+      return (
+        <thead>
+          <tr>
+            <th style={{width: 200, padding: "0.5rem"}}>Nama Kategori</th>
+            <th style={{width: 150, padding: "0.5rem"}}>Jumlah Produk</th>
+            <th style={{width: 100, padding: "0.5rem"}}>Diperbarui</th>
+            <th style={{width: 100, padding: "0.5rem"}}>Dibuat</th>
+            <th style={{width: 80, padding: "0.5rem"}}> </th>
+          </tr>
+        </thead>
+      );
     }
+  };
+
+  const getColSpan = () => {
+    return entityName === "products" ? 7 : 5;
+  };
+
+  useEffect(() => {
+    refetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlSearchParams]);
 
   useEffect(() => {
-    if (debouncedSearchTerm.trim() !== "") {
-      handleSearchName;
-    }
+    handleSearchName();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm]);
 
   return (
-    <Sheet
-      className="OrderTableContainer"
-      variant="outlined"
-      sx={{
-        // width: "100%",
-        borderRadius: "sm",
-        // overflow: "auto",
-      }}
-    >
-      <Box
+    <>
+      <Sheet
+        className="OrderTableContainer"
+        variant="outlined"
         sx={{
-          width: "100%",
-          borderBottom: "1px solid var(--joy-palette-neutral-200)",
-          paddingY: "1rem",
-          paddingX: "1.5rem",
+          borderRadius: "md",
+          overflow: "hidden",
         }}
       >
-        <Typography
-          level="h4"
+        <Box
           sx={{
-            fontWeight: "bold",
-            color: "var(--joy-palette-text-primary)",
+            width: "100%",
+            borderBottom: "1px solid var(--joy-palette-neutral-200)",
+            paddingY: "1rem",
+            paddingX: "1.5rem",
           }}
         >
-          {title}
-        </Typography>
-      </Box>
+          <Typography
+            level="h4"
+            sx={{
+              fontWeight: "bold",
+              color: "var(--joy-palette-text-primary)",
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
 
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          padding: "1.5rem",
-        }}
-      >
-        <form onSubmit={handleSubmitForm}>
-          <StyledInput
-            name="name"
-            placeholder={"Cari nama..."}
-            startDecorator={<Search />}
-            size="md"
-            onChange={handleChangeSearch}
-            value={filters?.name}
-          />
-        </form>
-
-        <StyledButton
-          startDecorator={<AddRounded />}
-          onClick={handleCreateProduct}
-        >
-          Produk Baru
-        </StyledButton>
-      </Box>
-
-      <Box sx={{overflow: "auto"}}>
-        <Table
-          aria-labelledby="tableTitle"
-          stickyHeader
-          stickyFooter
-          hoverRow
+        <Box
+          className="SearchAndFilters-tabletUp"
           sx={{
-            "--TableCell-headBackground":
-              "var(--joy-palette-background-level1)",
-            "--Table-headerUnderlineThickness": "1px",
-            "--TableRow-hoverBackground":
-              "var(--joy-palette-background-level1)",
-            "--TableCell-paddingY": "4px",
-            "--TableCell-paddingX": "8px",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            padding: "1.5rem",
+            gap: 2,
           }}
         >
-          <thead>
-            <tr>
-              <th style={{width: 50, textAlign: "center", padding: "12px 6px"}}>
-                Id
-              </th>
-              <th style={{width: 100, padding: "12px 6px"}}>Foto</th>
-              <th style={{width: 200, padding: "12px 6px"}}>Nama</th>
-              <th style={{width: 150, padding: "12px 6px"}}>Ukuran</th>
-              <th style={{width: 50, padding: "12px 6px"}}>Stok</th>
-              <th style={{width: 100, padding: "12px 6px"}}>Diperbarui</th>
-              <th style={{width: 100, padding: "12px 6px"}}>Dibuat</th>
-              <th style={{width: 80, padding: "12px 6px"}}> </th>
-            </tr>
-          </thead>
-          <tbody>{renderContent()}</tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={8}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    justifyContent: "flex-end",
-                  }}
-                  className="Pagination-laptopUp"
-                >
-                  <FormControl orientation="horizontal" size="sm">
-                    <FormLabel>Baris per halaman:</FormLabel>
-                    <Select onChange={handleChangeRowsPerPage} value={limit}>
-                      <Option value={5}>5</Option>
-                      <Option value={10}>10</Option>
-                      <Option value={20}>20</Option>
-                    </Select>
-                  </FormControl>
-                  <Typography textAlign="center" sx={{minWidth: 80}}>
-                    {getLabelDisplayedRows(
-                      usedData.length === 0 ? 0 : (page - 1) * limit + 1,
-                      totalRecords
-                    )}
-                  </Typography>
-                  <Box sx={{display: "flex", gap: 1}}>
-                    {!isFirstPage ? (
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        onClick={() => handleChangePage(page - 1)}
-                        sx={{bgcolor: "background.surface"}}
-                      >
-                        <KeyboardArrowLeft />
-                      </IconButton>
-                    ) : null}
-                    {!isLastPage ? (
-                      <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        onClick={() => handleChangePage(page + 1)}
-                        sx={{bgcolor: "background.surface"}}
-                      >
-                        <KeyboardArrowRight />
-                      </IconButton>
-                    ) : null}
+          <form onSubmit={handleSubmitForm}>
+            <StyledInput
+              name="search"
+              placeholder={`Cari ${title}...`}
+              startDecorator={<Search />}
+              size="md"
+              onChange={handleChangeFilter}
+              value={filters?.search}
+            />
+          </form>
+
+          <StyledButton startDecorator={<AddRounded />} onClick={handleCreate}>
+            {`${title} Baru`}
+          </StyledButton>
+        </Box>
+
+        <Box sx={{overflow: "auto"}}>
+          <JoyTable
+            aria-labelledby="tableTitle"
+            stickyHeader
+            stickyFooter
+            hoverRow
+            sx={{
+              "--TableCell-headBackground":
+                "var(--joy-palette-background-level1)",
+              "--Table-headerUnderlineThickness": "1px",
+              "--TableRow-hoverBackground":
+                "var(--joy-palette-background-level1)",
+              "--TableCell-paddingY": "12px",
+              "--TableCell-paddingX": "16px",
+            }}
+          >
+            {getTableHeaders()}
+            <tbody>{renderContent()}</tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={getColSpan()}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      justifyContent: "flex-end",
+                      padding: "1rem",
+                    }}
+                    className="Pagination-laptopUp"
+                  >
+                    <FormControl orientation="horizontal" size="sm">
+                      <FormLabel>Baris per halaman:</FormLabel>
+                      <Select onChange={handleChangeRowsPerPage} value={limit}>
+                        <Option value={5}>5</Option>
+                        <Option value={10}>10</Option>
+                        <Option value={20}>20</Option>
+                      </Select>
+                    </FormControl>
+                    <Typography textAlign="center" sx={{minWidth: 80}}>
+                      {getLabelDisplayedRows(
+                        usedData.length === 0 ? 0 : (page - 1) * limit + 1,
+                        totalRecords
+                      )}
+                    </Typography>
+                    <Box sx={{display: "flex", gap: 1}}>
+                      {!isFirstPage ? (
+                        <IconButton
+                          size="sm"
+                          color="neutral"
+                          variant="outlined"
+                          onClick={() => handleChangePage(page - 1)}
+                          sx={{bgcolor: "background.surface"}}
+                        >
+                          <KeyboardArrowLeft />
+                        </IconButton>
+                      ) : null}
+                      {!isLastPage ? (
+                        <IconButton
+                          size="sm"
+                          color="neutral"
+                          variant="outlined"
+                          onClick={() => handleChangePage(page + 1)}
+                          sx={{bgcolor: "background.surface"}}
+                        >
+                          <KeyboardArrowRight />
+                        </IconButton>
+                      ) : null}
+                    </Box>
                   </Box>
-                </Box>
-              </td>
-            </tr>
-          </tfoot>
-        </Table>
-      </Box>
-    </Sheet>
+                </td>
+              </tr>
+            </tfoot>
+          </JoyTable>
+        </Box>
+      </Sheet>
+      {entityName !== "products" && (
+        <ModalCreate
+          open={modalOpen}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+          pathname={pathname}
+          title={title}
+        />
+      )}
+    </>
   );
 };
 

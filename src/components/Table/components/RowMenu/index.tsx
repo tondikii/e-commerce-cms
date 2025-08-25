@@ -1,5 +1,6 @@
+// src/components/Table/components/RowMenu/index.tsx
 import {api} from "@/lib/axios";
-import {Product} from "@/types";
+import {Product, Category} from "@/types";
 import {MoreHorizRounded} from "@mui/icons-material";
 import {
   Divider,
@@ -13,36 +14,51 @@ import type {FC} from "react";
 import Swal from "sweetalert2";
 
 interface RowMenuProps {
-  product: Product;
+  data: Product | Category;
   entityName: string;
   router: any;
   refetch: () => void;
+  pathname: string;
 }
 
-const RowMenu: FC<RowMenuProps> = ({product, entityName, router, refetch}) => {
-  const handleDeleteProduct = async () => {
+const RowMenu: FC<RowMenuProps> = ({
+  data,
+  entityName,
+  router,
+  refetch,
+  pathname,
+}) => {
+  const handleDelete = async () => {
     try {
-      await api.delete(entityName, {
-        params: {id: product.id},
+      await api.delete(pathname, {
+        params: {id: data.id},
       });
 
       Swal.fire({
-        title: "Berhasil Hapus Produk",
-        text: `Produk ${product.name} berhasil dihapus`,
+        title: `Berhasil Hapus ${
+          entityName === "categories" ? "Kategori" : "Produk"
+        }`,
+        text: `${entityName === "categories" ? "Kategori" : "Produk"} ${
+          data.name
+        } berhasil dihapus`,
         icon: "success",
       });
       refetch();
     } catch (err) {
       Swal.fire({
-        title: "Gagal Hapus Produk",
-        text: `Produk ${product.name} gagal dihapus`,
+        title: `Gagal Hapus ${
+          entityName === "categories" ? "Kategori" : "Produk"
+        }`,
+        text: `${entityName === "categories" ? "Kategori" : "Produk"} ${
+          data.name
+        } gagal dihapus`,
         icon: "error",
       });
     }
   };
 
-  const handleEditProduct = () => {
-    router.push(`${product.categoryId}/edit/${product.id}`);
+  const handleEdit = () => {
+    router.push(`${pathname}/detail/${data.id}`);
   };
 
   return (
@@ -54,9 +70,11 @@ const RowMenu: FC<RowMenuProps> = ({product, entityName, router, refetch}) => {
         <MoreHorizRounded />
       </MenuButton>
       <Menu size="sm" sx={{minWidth: 140}}>
-        <MenuItem onClick={handleEditProduct}>Edit</MenuItem>
+        <MenuItem onClick={handleEdit}>
+          {entityName === "categories" ? "Edit" : "Detail"}
+        </MenuItem>
         <Divider />
-        <MenuItem color="danger" onClick={handleDeleteProduct}>
+        <MenuItem color="danger" onClick={handleDelete}>
           Hapus
         </MenuItem>
       </Menu>

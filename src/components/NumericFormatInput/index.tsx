@@ -3,7 +3,7 @@ import {NumericFormat, NumericFormatProps} from "react-number-format";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import {FormControl} from "..";
-import {SxProps} from "@mui/material";
+import {SxProps} from "@mui/joy/styles/types";
 
 interface CustomProps {
   onChange: (event: {target: {name: string; value: string}}) => void;

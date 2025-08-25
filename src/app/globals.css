@@ -77,3 +77,14 @@ body {
   width: 100% !important;
   max-width: 100% !important;
 }
+
+/* Tambahkan di global CSS atau menggunakan sx prop */
+.MuiChip-endDecorator {
+  margin-left: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.MuiChip-endDecorator:hover {
+  color: var(--joy-palette-danger-500) !important;
+}

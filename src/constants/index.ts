@@ -1,7 +1,5 @@
 import {BreadCrumbData} from "@/types";
-
-export const ENDPOINT_PRODUCT = "product";
-export const ENDPOINT_CATEGORY = "category";
+import {ProductDetailType, ProductOptionType} from "@/types/product";
 
 export const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT =
@@ -19,8 +17,23 @@ export const RESPONSE_STATUS_BAD_REQUEST = 400;
 
 export const BREAD_CRUMB_PATHNAMES: BreadCrumbData[] = [
   {name: "products", label: "Produk"},
-  {name: "category", label: "collection"},
-  {name: "category", label: "Koleksi"},
+  {name: "categories", label: "Kategori"},
+  {name: "collections", label: "Koleksi"},
   {name: "create", label: "Buat"},
   {name: "detail", label: "Detail"},
+];
+
+export const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+export const INITIAL_FORM_PRODUCT_DETAIL: ProductDetailType = {
+  name: "",
+  description: "",
+  images: [],
+};
+
+export const INITIAL_FORM_PRODUCT_OPTIONS: ProductOptionType[] = [
+  {
+    name: "",
+    variants: [],
+  },
 ];

@@ -95,7 +95,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({session, handleSignOut}) => {
           </IconButton>
 
           <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
-            <Avatar size="md" sx={{backgroundColor: "primary.500"}}>
+            <Avatar size="md" sx={{border: "1px solid"}}>
               {getInitialsName(user?.name)}
             </Avatar>
             <Box>

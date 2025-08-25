@@ -7,7 +7,7 @@ import {Table} from "@/components";
 interface Props {}
 
 const ProductsPage: FC<Props> = ({}) => {
-  return <Table title="Produk" entityName="product" />;
+  return <Table title="Produk" entityName="products" />;
 };
 
 export default ProductsPage;

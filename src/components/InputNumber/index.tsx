@@ -9,7 +9,7 @@ interface Props {
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
-  value?: string;
+  value?: string | number;
 }
 
 const InputNumber: FC<Props> = ({

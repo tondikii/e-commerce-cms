@@ -1,6 +1,6 @@
 # e-commerce-cms
 
-CMS TokoTrend using next.js typescript, vercel/postgres, prisma orm.
+CMS RUMAH FASHION using next.js typescript, vercel/postgres, prisma orm.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

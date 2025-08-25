@@ -41,16 +41,20 @@ const StyledTextarea: FC<Props> = ({
   required,
   maxLength = 255, // Default maxLength
 }) => {
-
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (maxLength && e.target.value.length > maxLength) {
       e.target.value = e.target.value.slice(0, maxLength);
     }
     onChange(e);
-  }
+  };
 
   return (
-    <FormControl label={label} errorMessage={errorMessage} required={required}>
+    <FormControl
+      label={label}
+      errorMessage={errorMessage}
+      required={required}
+      size={size}
+    >
       <Textarea
         name={name}
         placeholder={placeholder}

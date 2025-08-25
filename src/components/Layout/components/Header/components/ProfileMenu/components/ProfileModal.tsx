@@ -55,9 +55,9 @@ const ProfileModal: FC<ProfileModalProps> = ({open, onClose, user}) => {
               sx={{
                 width: 64,
                 height: 64,
-                backgroundColor: "primary.500",
                 mx: "auto",
                 mb: 2,
+                border: "1px solid",
               }}
             >
               {getInitialsName(user?.name)}

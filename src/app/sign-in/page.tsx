@@ -1,12 +1,17 @@
 "use client";
-import {CopyRight, StyledSubmitButton, StyledInput} from "@/components";
 import {
-  RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT,
-} from "@/constants";
+  CopyRight,
+  StyledSubmitButton,
+  StyledInput,
+  Title,
+  TextSecondary,
+  StoreLogo,
+} from "@/components";
+import {RESPONSE_MESSAGE_INVALID_EMAIL_FORMAT} from "@/constants";
 import {useRedirectIfAuthenticated} from "@/hooks";
 import {validateEmailFormat} from "@/utils";
 import {Key, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
-import {Box, IconButton} from "@mui/joy";
+import {Box, Card, IconButton, Stack} from "@mui/joy";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useMemo, useState, type FC} from "react";
@@ -83,7 +88,7 @@ const SignUpPage: FC<Props> = ({}) => {
       router.push("/");
       Swal.fire({
         title: "Berhasil Masuk",
-        text: "Selamat bekerja kembali di TokoTrend",
+        text: "Selamat bekerja kembali di RUMAH FASHION",
         icon: "success",
       });
     } catch (err: any) {
@@ -110,11 +115,12 @@ const SignUpPage: FC<Props> = ({}) => {
 
   return (
     <div className="flex flex-col justify-center items-center min-height-screen min-width-screen">
-      <span className="text-4xl font-montserrat font-black absolute top-4 left-4">
-        TokoTrend
-      </span>
-      <div className="flex flex-col justify-center items-center bg-secondary rounded-xl w-2/6 p-8 bg-secondary">
-        <h1 className="text-3xl font-montserrat font-bold mb-4">MASUK</h1>
+      <Card variant="outlined" sx={{alignItems: "center", width: "33%", p: 4}}>
+        <StoreLogo />
+        <Stack sx={{mb: 2, textAlign: "center"}}>
+          <Title>Selamat datang</Title>
+          <TextSecondary>Masuk untuk mengelola dasbor</TextSecondary>
+        </Stack>
         <form onSubmit={onSubmitForm} className="w-full">
           <Box
             sx={{
@@ -146,13 +152,10 @@ const SignUpPage: FC<Props> = ({}) => {
             />
           </Box>
           <StyledSubmitButton type="submit" loading={loading}>
-            MASUK
+            Masuk
           </StyledSubmitButton>
         </form>
-      </div>
-      <div className="absolute bottom-4">
-        <CopyRight />
-      </div>
+      </Card>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import {Categories} from "@/types";
 import {createContext} from "react";
 
 interface MasterDataContextType {

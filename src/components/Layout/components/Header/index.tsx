@@ -1,7 +1,7 @@
 "use client";
 
 import React, {FC} from "react";
-import {Box, Typography, IconButton, Breadcrumbs, Link} from "@mui/joy";
+import {Box, IconButton, Breadcrumbs, Link} from "@mui/joy";
 import {
   KeyboardArrowRight,
   Menu as MenuIcon,
@@ -11,10 +11,10 @@ import {SessionType} from "@/types";
 import ProfileMenu from "./components/ProfileMenu";
 import {BREAD_CRUMB_PATHNAMES} from "@/constants";
 import {usePathname, useRouter} from "next/navigation";
+import Title from "@/components/typography/Title";
 
 interface HeaderProps {
   onMenuClick?: () => void;
-  title?: string;
   showMenuButton?: boolean;
   session: SessionType;
   handleSignOut: () => void;
@@ -22,7 +22,6 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({
   onMenuClick,
-  title = "Dashboard",
   showMenuButton = false,
   session,
   handleSignOut,
@@ -38,6 +37,44 @@ const Header: FC<HeaderProps> = ({
 
   const goBack = () => {
     router.back();
+  };
+
+  const renderBreadcrumb = () => {
+    if (breadCrumbsData.length > 0) {
+      return (
+        <Breadcrumbs
+          separator={<KeyboardArrowRight />}
+          aria-label="breadcrumbs"
+        >
+          {breadCrumbsData.map((e, idx) => {
+            if (idx === breadCrumbsData.length - 1) {
+              return (
+                <Title level="title-lg" key={e.name}>
+                  {e.label}
+                </Title>
+              );
+            }
+
+            let route = "";
+
+            for (let i = 0; i <= idx; i++) {
+              route += `/${breadCrumbsData[i].name}`;
+            }
+            return (
+              <Link key={e.name} color="neutral" href={route} fontWeight={500}>
+                {e.label}
+              </Link>
+            );
+          })}
+        </Breadcrumbs>
+      );
+    }
+
+    if (pathname === "/") {
+      return <Title level="title-lg">Home</Title>;
+    }
+
+    return null;
   };
 
   return (
@@ -83,40 +120,7 @@ const Header: FC<HeaderProps> = ({
           <ReplyAllRounded />
         </IconButton>
 
-        {breadCrumbsData.length > 0 ? (
-          <Breadcrumbs
-            separator={<KeyboardArrowRight />}
-            aria-label="breadcrumbs"
-          >
-            {breadCrumbsData.map((e, idx) => {
-              if (idx === breadCrumbsData.length - 1) {
-                return (
-                  <Typography fontWeight={600} key={e.name}>
-                    {e.label}
-                  </Typography>
-                );
-              }
-
-              let route = "";
-
-              for (let i = 0; i <= idx; i++) {
-                route += `/${breadCrumbsData[i].name}`;
-              }
-              return (
-                <Link
-                  key={e.name}
-                  color="neutral"
-                  href={route}
-                  fontWeight={500}
-                >
-                  {e.label}
-                </Link>
-              );
-            })}
-          </Breadcrumbs>
-        ) : (
-          <Typography fontWeight={600}>Home</Typography>
-        )}
+        {renderBreadcrumb()}
       </Box>
 
       {/* Right Section */}
