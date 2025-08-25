@@ -53,6 +53,8 @@ export interface Collection {
   id: number;
   name: string;
   products?: Product[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type Collections = Collection[];

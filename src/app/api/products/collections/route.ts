@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     if (!name || !name.trim()) {
       return NextResponse.json(
-        {error: "Nama kategori harus diisi"},
+        {error: "Nama koleksi harus diisi"},
         {status: 400}
       );
     }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     if (existingCollection) {
       return NextResponse.json(
-        {error: "Kategori dengan nama tersebut sudah ada"},
+        {error: "Koleksi dengan nama tersebut sudah ada"},
         {status: 400}
       );
     }
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(collection, {status: 201});
   } catch (error) {
-    return NextResponse.json({error: "Gagal membuat kategori"}, {status: 500});
+    return NextResponse.json({error: "Gagal membuat koleksi"}, {status: 500});
   }
 }
 
@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
         }
       : {};
 
-    // Get categories with product count
-    const [categories, totalRecords] = await Promise.all([
+    // Get collections with product count
+    const [collections, totalRecords] = await Promise.all([
       prisma.collection.findMany({
         where,
         include: {
@@ -87,18 +87,18 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Transform data to include product count
-    const categoriesWithCount = categories.map((collection) => ({
+    const collectionsWithCount = collections.map((collection) => ({
       ...collection,
       products: collection?.products, // Already included from include
     }));
 
     return NextResponse.json({
-      data: categoriesWithCount,
+      data: collectionsWithCount,
       totalRecords,
     });
   } catch (error) {
     return NextResponse.json(
-      {error: "Gagal mengambil data kategori"},
+      {error: "Gagal mengambil data koleksi"},
       {status: 500}
     );
   }

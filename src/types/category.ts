@@ -10,3 +10,7 @@ export interface Category {
 }
 
 export type Categories = Category[];
+
+export interface CategoryWithProducts extends Category {
+  products: Product[];
+}

@@ -29,7 +29,7 @@ import RowMenu from "./components/RowMenu";
 import {usePathname, useRouter} from "next/navigation";
 import {useDebounce, useFetch, useSearchParams} from "@/hooks";
 import StyledInput from "../StyledInput";
-import {ModalCreate, StyledButton} from "..";
+import {ModalCreateEntity, StyledButton} from "..";
 
 interface FilterType {
   search: string;
@@ -449,7 +449,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
         </Box>
       </Sheet>
       {entityName !== "products" && (
-        <ModalCreate
+        <ModalCreateEntity
           open={modalOpen}
           onClose={handleModalClose}
           onSuccess={handleModalSuccess}

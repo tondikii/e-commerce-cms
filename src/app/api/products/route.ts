@@ -80,6 +80,8 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const search = searchParams.get("search");
+    const noCategory = searchParams.get("noCategory");
+    const noCollection = searchParams.get("noCollection");
 
     const skip = (page - 1) * limit;
 
@@ -91,6 +93,14 @@ export async function GET(request: NextRequest) {
         {name: {contains: search, mode: "insensitive"}},
         {description: {contains: search, mode: "insensitive"}},
       ];
+    }
+
+    if (noCategory === "true") {
+      where.categoryId = null;
+    }
+
+    if (noCollection === "true") {
+      where.collectionId = null;
     }
 
     // Get products dengan relations

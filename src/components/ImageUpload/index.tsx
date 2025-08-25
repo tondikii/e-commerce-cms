@@ -7,7 +7,6 @@ import {
   CloseRounded,
   WarningRounded,
 } from "@mui/icons-material";
-import {createPreviewUrl} from "../ProductForm/utils";
 import Image from "next/image";
 import {MAX_FILE_SIZE} from "@/constants";
 import {formatFileSize} from "@/utils";
@@ -176,7 +175,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       {files.length > 0 && (
         <Box>
           {files.map((file, index) => {
-            const previewUrl = createPreviewUrl(file);
+            const previewUrl = URL.createObjectURL(file);
             return (
               <Sheet
                 key={file.name + index}

@@ -7,13 +7,9 @@ export interface TextProps extends TypographyProps {
 
 const customSx = {color: "var(--joy-palette-text-primary)"};
 
-const Text: FC<TextProps> = ({
-  children,
-  level = "body-sm",
-  ...props // Nama yang lebih spesifik
-}) => {
+const Text: FC<TextProps> = ({children, level = "body-sm", ...props}) => {
   return (
-    <Typography sx={{...customSx, ...props.sx}} {...props}>
+    <Typography level={level} sx={{...customSx, ...props.sx}} {...props}>
       {children}
     </Typography>
   );
