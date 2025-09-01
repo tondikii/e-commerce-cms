@@ -88,13 +88,13 @@ const CreateProductPage: FC<Props> = () => {
       });
 
       setLoading(false);
+      router.back();
 
       await Swal.fire({
         title: "Berhasil",
         text: `Produk ${productDetail.data.name} berhasil dibuat`,
         icon: "success",
       });
-      router.back();
     } catch (error) {
       setLoading(false);
       Swal.fire({
@@ -143,12 +143,7 @@ const CreateProductPage: FC<Props> = () => {
                   left: "100%",
                   width: "20px",
                   height: "2px",
-                  bgcolor:
-                    index < activeStep
-                      ? "primary.500"
-                      : step.completed
-                      ? "primary.200"
-                      : "neutral.200",
+                  bgcolor: index < activeStep ? "neutral.500" : "neutral.200",
                   transform: "translateY(-50%)",
                   zIndex: 1,
                 },
@@ -157,13 +152,7 @@ const CreateProductPage: FC<Props> = () => {
             >
               <StepIndicator
                 variant={activeStep === index ? "solid" : "outlined"}
-                color={
-                  activeStep === index
-                    ? "primary"
-                    : step.completed
-                    ? "primary"
-                    : "neutral"
-                }
+                color="neutral"
                 sx={{
                   width: 36,
                   height: 36,
@@ -180,8 +169,7 @@ const CreateProductPage: FC<Props> = () => {
                   level="body-sm"
                   sx={{
                     fontWeight: activeStep === index ? "lg" : "md",
-                    color:
-                      activeStep === index ? "primary.700" : "text.primary",
+                    color: "text.primary",
                   }}
                 >
                   {step.label}
@@ -233,7 +221,7 @@ const CreateProductPage: FC<Props> = () => {
 
         <Button
           variant="solid"
-          color="primary"
+          color="neutral"
           endDecorator={<KeyboardArrowRight />}
           onClick={handleNext}
           disabled={activeStep < steps.length && !steps[activeStep].completed}

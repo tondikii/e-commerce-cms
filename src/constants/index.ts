@@ -21,6 +21,7 @@ export const BREAD_CRUMB_PATHNAMES: BreadCrumbData[] = [
   {name: "collections", label: "Koleksi"},
   {name: "create", label: "Buat"},
   {name: "detail", label: "Detail"},
+  {name: "orders", label: "Pesanan"},
 ];
 
 export const MAX_FILE_SIZE = 2 * 1024 * 1024;

@@ -452,10 +452,10 @@ export default function ProductDetailPage() {
             </Button>
             <Button
               variant="solid"
-              color="primary"
               startDecorator={<SaveRounded />}
               onClick={handleSave}
               loading={loading}
+              color="neutral"
             >
               Simpan
             </Button>
@@ -465,6 +465,7 @@ export default function ProductDetailPage() {
             variant="outlined"
             startDecorator={<EditRounded />}
             onClick={handleEditToggle}
+            color="warning"
           >
             Edit
           </Button>
@@ -702,6 +703,7 @@ export default function ProductDetailPage() {
                 startDecorator={<AddRounded />}
                 onClick={addOption}
                 variant="outlined"
+                color="neutral"
               >
                 Tambah Pilihan
               </Button>

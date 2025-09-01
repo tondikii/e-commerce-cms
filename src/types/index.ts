@@ -89,3 +89,124 @@ export interface FetchedData {
   loading: boolean;
   error: any;
 }
+
+export interface ProductVariant {
+  id: number;
+  sku: string;
+  price: number;
+  stock: number;
+  optionValues: any; // JSON object
+  productId: number;
+  product: Product;
+}
+
+export interface Cart {
+  id: number;
+  userId: number;
+  user: User;
+  items: CartItem[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CartItem {
+  id: number;
+  quantity: number;
+  cartId: number;
+  cart: Cart;
+  variantId: number;
+  variant: ProductVariant;
+  // Optional: tambahan field untuk memudahkan frontend
+  productName?: string;
+  productImage?: string;
+  variantName?: string;
+}
+
+// User Types
+export interface User {
+  id: number;
+  email: string;
+  name?: string;
+  phoneNumber?: string;
+  isAdmin: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  addresses?: ShippingAddress[];
+  carts?: Cart[];
+  orders?: Order[];
+}
+
+export interface ShippingAddress {
+  id: number;
+  recipient: string;
+  phone: string;
+  address: string;
+  province: string;
+  city: string;
+  postalCode: string;
+  userId: number;
+  user: User;
+  orders: Order[];
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Enums
+export type OrderStatus =
+  | "PENDING"
+  | "PROCESSING"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "CANCELLED";
+export type PaymentMethod =
+  | "BANK_TRANSFER"
+  | "GOPAY"
+  | "SHOPEEPAY"
+  | "QRIS"
+  | "CREDIT_CARD"
+  | "ALFAMART"
+  | "INDOMARET";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "EXPIRED";
+export interface Payment {
+  id: string;
+  orderId: number;
+  order: Order;
+  amount: number;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  snapToken?: string;
+  vaNumber?: string;
+  bank?: string;
+  expiryAt?: Date;
+  paidAt?: Date;
+  midtransResponse?: any; // JSON object
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface OrderItem {
+  id: number;
+  orderId: number;
+  order: Order;
+  variantId: number;
+  variant: ProductVariant;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: number;
+  orderNumber: string;
+  userId: number;
+  user: User;
+  items: OrderItem[];
+  shippingAddressId: number;
+  shippingAddress: ShippingAddress;
+  shippingCost: number;
+  totalAmount: number;
+  status: OrderStatus;
+  payment?: Payment;
+  createdAt: Date;
+  updatedAt: Date;
+}

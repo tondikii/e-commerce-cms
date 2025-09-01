@@ -67,7 +67,6 @@ export async function PUT(
       message: "Produk dalam kategori berhasil diperbarui",
     });
   } catch (error) {
-    console.error("Error updating category products:", error);
     return NextResponse.json(
       {error: "Gagal mengupdate produk dalam kategori"},
       {status: 500}

@@ -16,11 +16,7 @@ export {default as ProductDetailForm} from "./ProductDetailForm";
 export {default as ProductOptionsForm} from "./ProductOptionsForm";
 export {default as ProductVariantForm} from "./ProductVariantForm";
 
-// Typography
-export {default as Text} from "./typography/Text";
-export {default as Title} from "./typography/Title";
-export {default as Subtitle} from "./typography/Subtitle";
-export {default as TextSecondary} from "./typography/TextSecondary";
+export * from "./typography";
 
 // Others
 export {default as StoreLogo} from "./StoreLogo";

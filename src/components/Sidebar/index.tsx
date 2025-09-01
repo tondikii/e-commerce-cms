@@ -2,18 +2,15 @@
 import {useEffect, useState} from "react";
 import Box from "@mui/joy/Box";
 import List from "@mui/joy/List";
-import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import {MenusType} from "@/types";
 import {usePathname} from "next/navigation";
 import Menu from "./components/Menu";
-import StoreName from "../StoreLogo";
 import Link from "next/link";
-import {Stack} from "@mui/joy";
-import Image from "next/image";
 import {StoreLogo} from "..";
+import {ReceiptRounded} from "@mui/icons-material";
 
 interface Props {
   open?: boolean;
@@ -38,6 +35,7 @@ const Sidebar: React.FC<Props> = ({open = true, onClose}) => {
         route: `/products${route}`,
       })),
     },
+    {label: "Pesanan", route: "/orders", icon: <ReceiptRounded />},
   ];
 
   useEffect(() => {

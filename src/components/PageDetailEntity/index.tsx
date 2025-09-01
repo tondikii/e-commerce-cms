@@ -79,7 +79,6 @@ export default function EntityDetailPage({
         response.data.products?.map((p: Product) => p.id) || []
       );
     } catch (error) {
-      console.error(`Failed to fetch ${entityName}:`, error);
       Swal.fire({
         title: "Error",
         text: `Gagal memuat data ${entityName}`,
@@ -94,9 +93,7 @@ export default function EntityDetailPage({
     try {
       const response = await api.get("/products?limit=1000");
       setAllProducts(response.data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    }
+    } catch (error) {}
   };
 
   const fetchAvailableProducts = async () => {
@@ -105,9 +102,7 @@ export default function EntityDetailPage({
         entityType === "category" ? "noCategory=true" : "noCollection=true";
       const response = await api.get(`/products?limit=1000&${queryParam}`);
       setAvailableProducts(response.data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch available products:", error);
-    }
+    } catch (error) {}
   };
 
   const handleEditToggle = () => {
@@ -147,7 +142,6 @@ export default function EntityDetailPage({
         icon: "success",
       });
     } catch (error) {
-      console.error(`Failed to update ${entityName}:`, error);
       Swal.fire({
         title: "Error",
         text: `Gagal memperbarui ${entityName}`,
@@ -211,7 +205,6 @@ export default function EntityDetailPage({
         icon: "success",
       });
     } catch (error) {
-      console.error("Failed to add products:", error);
       Swal.fire({
         title: "Error",
         text: `Gagal menambahkan produk ke ${entityName}`,
@@ -240,7 +233,6 @@ export default function EntityDetailPage({
         icon: "success",
       });
     } catch (error) {
-      console.error("Failed to remove product:", error);
       Swal.fire({
         title: "Error",
         text: `Gagal menghapus produk dari ${entityName}`,
@@ -291,7 +283,7 @@ export default function EntityDetailPage({
             </Button>
             <Button
               variant="solid"
-              color="primary"
+              color="neutral"
               startDecorator={<SaveRounded />}
               onClick={handleSave}
               loading={loading}
@@ -304,6 +296,7 @@ export default function EntityDetailPage({
             variant="outlined"
             startDecorator={<EditRounded />}
             onClick={handleEditToggle}
+            color="warning"
           >
             Edit
           </Button>
@@ -368,10 +361,11 @@ export default function EntityDetailPage({
             <Title>Produk dalam {entityName}</Title>
 
             <Button
-              variant="outlined"
+              variant="solid"
               startDecorator={<AddRounded />}
               onClick={handleOpenAddProductsModal}
               disabled={!isEditing}
+              color="neutral"
             >
               Tambah Produk
             </Button>
@@ -462,6 +456,7 @@ export default function EntityDetailPage({
                     variant="outlined"
                     size="sm"
                     onClick={handleSelectAllAvailable}
+                    color="neutral"
                   >
                     {productsToAdd.length === availableProducts.length
                       ? "Batal Pilih Semua"
@@ -489,6 +484,7 @@ export default function EntityDetailPage({
                             onChange={() =>
                               handleProductToAddSelection(product.id)
                             }
+                            color="neutral"
                           />
                         </td>
                         <td>
@@ -548,6 +544,7 @@ export default function EntityDetailPage({
               onClick={handleAddProducts}
               disabled={productsToAdd.length === 0}
               loading={loading}
+              color="neutral"
             >
               Tambah Produk ({productsToAdd.length})
             </Button>

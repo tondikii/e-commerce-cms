@@ -1,5 +1,7 @@
-import type {FC, ReactNode} from "react";
-import Title from "../typography/Title";
+"use client";
+
+import type {FC} from "react";
+import {Title} from "..";
 import {SxProps} from "@mui/joy/styles/types";
 import {Staatliches} from "next/font/google";
 import {Stack} from "@mui/joy";

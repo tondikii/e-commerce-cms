@@ -67,7 +67,6 @@ export async function PUT(
       message: "Produk dalam koleksi berhasil diperbarui",
     });
   } catch (error) {
-    console.error("Error updating collection products:", error);
     return NextResponse.json(
       {error: "Gagal mengupdate produk dalam koleksi"},
       {status: 500}

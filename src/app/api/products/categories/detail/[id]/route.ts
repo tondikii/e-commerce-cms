@@ -46,7 +46,6 @@ export async function GET(
 
     return NextResponse.json(category);
   } catch (error) {
-    console.error("Error fetching category:", error);
     return NextResponse.json(
       {error: "Gagal mengambil data kategori"},
       {status: 500}
@@ -120,7 +119,6 @@ export async function PUT(
 
     return NextResponse.json(updatedCategory);
   } catch (error) {
-    console.error("Error updating category:", error);
     return NextResponse.json(
       {error: "Gagal mengupdate kategori"},
       {status: 500}

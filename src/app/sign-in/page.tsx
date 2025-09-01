@@ -1,6 +1,5 @@
 "use client";
 import {
-  CopyRight,
   StyledSubmitButton,
   StyledInput,
   Title,

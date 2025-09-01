@@ -46,7 +46,6 @@ export async function GET(
 
     return NextResponse.json(collection);
   } catch (error) {
-    console.error("Error fetching collection:", error);
     return NextResponse.json(
       {error: "Gagal mengambil data koleksi"},
       {status: 500}
@@ -120,7 +119,6 @@ export async function PUT(
 
     return NextResponse.json(updatedCollection);
   } catch (error) {
-    console.error("Error updating collection:", error);
     return NextResponse.json(
       {error: "Gagal mengupdate koleksi"},
       {status: 500}
